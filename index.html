@@ -1,1 +1,1113 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midterm EOC Checkpoint - American Chronicles</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c12;--bg2:#0e1520;--bg3:#141e2c;--panel:#192338;
+  --border:#1e2d42;--border2:#2a3f5a;
+  --liberty:#4a9fd4;--liberty2:#2d7aad;--liberty3:#7ec8f0;
+  --parchment:#e8d5a0;--parchment2:#c9b67a;--parchment3:#f5e8c0;
+  --red:#c03030;--red2:#e04040;
+  --green:#2a7a3a;--green2:#38a050;
+  --text:#e8dcc8;--text2:#8a9bb0;--text3:#4a5870;--cream:#f0e6d0;
+  --gold:#d4a017;--gold2:#b8860b;--gold3:#f0c040;
+  --bebas:'Bebas Neue',sans-serif;
+  --playfair:'Playfair Display',serif;
+  --crimson:'Crimson Text',serif;
+  --dm:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--crimson);min-height:100vh;overflow-x:hidden;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(74,159,212,0.08) 0%,transparent 50%),radial-gradient(ellipse at 85% 100%,rgba(180,134,11,0.07) 0%,transparent 50%);}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:0.8;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.008) 3px,rgba(0,0,0,0.008) 4px);pointer-events:none;z-index:9999;}
+#root{max-width:620px;margin:0 auto;padding:16px;padding-bottom:120px;min-height:100vh;position:relative;z-index:1;}
+.screen{display:none;}.screen.active{display:block;animation:fadeIn 0.4s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pop{0%{transform:scale(0.5);opacity:0;}70%{transform:scale(1.08);}100%{transform:scale(1);opacity:1;}}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-70px);}}
+.btn{font-family:var(--bebas);font-size:15px;letter-spacing:2px;background:transparent;border:1.5px solid var(--liberty);color:var(--liberty);padding:12px 28px;cursor:pointer;transition:all 0.2s;display:inline-block;position:relative;overflow:hidden;text-transform:uppercase;}
+.btn::before{content:'';position:absolute;inset:0;background:var(--liberty);transform:scaleX(0);transform-origin:left;transition:transform 0.2s;z-index:0;}
+.btn:hover{color:var(--bg);box-shadow:0 0 25px rgba(74,159,212,0.35);}.btn:hover::before{transform:scaleX(1);}
+.btn span{position:relative;z-index:1;}.btn:active{transform:scale(0.97);}
+.btn.full{display:block;width:100%;text-align:center;margin:6px 0;}
+.btn.gold{border-color:var(--gold);color:var(--gold);}.btn.gold::before{background:var(--gold);}.btn.gold:hover{color:var(--bg);}
+.btn.red{border-color:var(--red2);color:var(--red2);}.btn.red::before{background:var(--red2);}.btn.red:hover{color:#fff;}
+.btn.sm{font-size:11px;padding:8px 18px;}.btn:disabled{opacity:0.25;cursor:not-allowed;pointer-events:none;}
+#game-header{background:linear-gradient(180deg,rgba(8,12,18,0.98),rgba(14,21,32,0.96));border-bottom:1px solid var(--border2);padding:10px 14px;display:none;position:sticky;top:0;z-index:200;margin:-16px -16px 16px -16px;backdrop-filter:blur(12px);}
+.hud-inner{display:flex;align-items:center;gap:12px;}
+.hud-avatar{width:44px;height:44px;flex-shrink:0;cursor:pointer;}
+.hud-info{flex:1;min-width:0;}
+.hud-name{font-family:var(--playfair);font-size:12px;color:var(--liberty3);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic;}
+.hud-rank{font-family:var(--dm);font-size:10px;color:var(--text2);}
+.hud-stats{display:flex;gap:10px;flex-shrink:0;}
+.hud-stat{font-family:var(--dm);font-size:8px;color:var(--text3);text-align:center;}
+.hud-stat span{display:block;color:var(--liberty);font-size:13px;margin-top:1px;font-weight:600;}
+.notif{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--liberty2);padding:10px 20px;font-family:var(--dm);font-size:11px;color:var(--liberty);z-index:1000;animation:pop 0.3s,floatUp 2.5s 0.8s forwards;white-space:nowrap;max-width:90vw;text-align:center;}
+.notif.green{border-color:var(--green2);color:var(--green2);}.notif.red{border-color:var(--red2);color:var(--red2);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.94);z-index:400;overflow-y:auto;padding:20px 16px 80px;}
+.overlay.show{display:block;animation:fadeIn 0.2s;}
+.overlay-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:sticky;top:0;background:rgba(8,12,18,0.97);padding:10px 0;border-bottom:1px solid var(--border2);z-index:10;}
+.overlay-title{font-family:var(--bebas);font-size:22px;color:var(--liberty);letter-spacing:2px;}
+.overlay-close{font-family:var(--dm);font-size:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:7px 14px;cursor:pointer;transition:all 0.2s;}
+.overlay-close:hover{border-color:var(--liberty);color:var(--liberty);}
+.section-head{font-family:var(--bebas);font-size:18px;letter-spacing:2px;color:var(--liberty);border-bottom:1px solid var(--border2);padding-bottom:6px;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.section-head::before{content:'';display:block;width:3px;height:18px;background:var(--liberty);}
+.deco-divider{display:flex;align-items:center;gap:10px;margin:16px 0;}
+.deco-divider::before,.deco-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);}
+.deco-divider-icon{font-size:14px;color:var(--text3);}
+.era-badge{display:inline-block;font-family:var(--bebas);font-size:9px;letter-spacing:2px;padding:3px 10px;border:1px solid;margin-bottom:8px;}
+.choice-btn{display:block;width:100%;background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:14px 16px;cursor:pointer;text-align:left;transition:all 0.2s;margin-bottom:8px;position:relative;overflow:hidden;}
+.choice-btn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--liberty);transform:scaleY(0);transition:transform 0.2s;}
+.choice-btn:hover{border-color:var(--liberty2);background:rgba(74,159,212,0.04);}.choice-btn:hover::before{transform:scaleY(1);}
+.choice-btn.correct{border-color:var(--green2);background:rgba(56,160,80,0.08);animation:pop 0.3s;}.choice-btn.correct::before{background:var(--green2);transform:scaleY(1);}
+.choice-btn.incorrect{border-color:var(--red2);background:rgba(192,48,48,0.06);opacity:0.6;}.choice-btn.incorrect::before{background:var(--red2);transform:scaleY(1);}
+.feedback-panel{display:none;background:var(--bg2);border-left:3px solid var(--liberty);padding:16px 16px 16px 20px;margin-bottom:14px;animation:slideUp 0.3s;}
+.feedback-panel.show{display:block;}.feedback-panel.correct{border-color:var(--green2);}.feedback-panel.incorrect{border-color:var(--red2);}
+.feedback-verdict{font-family:var(--bebas);font-size:14px;letter-spacing:2px;margin-bottom:8px;}
+.feedback-verdict.correct{color:var(--green2);}.feedback-verdict.incorrect{color:var(--red2);}
+.feedback-text{font-family:var(--crimson);font-size:16px;line-height:1.6;color:var(--text);margin-bottom:8px;}
+.lb-table{width:100%;border-collapse:collapse;}
+.lb-table th{font-family:var(--bebas);font-size:10px;color:var(--text3);letter-spacing:2px;padding:8px 6px;border-bottom:1px solid var(--border2);text-align:left;}
+.lb-table td{padding:10px 6px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.lb-table tr.lb-you td{background:rgba(74,159,212,0.05);}
+.lb-name{font-family:var(--playfair);font-size:13px;color:var(--cream);font-style:italic;}
+.lb-score{font-family:var(--bebas);font-size:16px;color:var(--liberty);letter-spacing:1px;}
+.lb-tab{font-family:var(--dm);font-size:9px;padding:6px 12px;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text3);transition:all .15s;margin-right:5px;margin-bottom:5px;}
+.lb-tab.active{border-color:var(--liberty);color:var(--liberty);background:rgba(74,159,212,.08);}
+.profile-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.profile-stat{background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center;}
+.profile-stat-val{font-family:var(--bebas);font-size:24px;color:var(--liberty);}
+.profile-stat-lbl{font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:1px;margin-top:2px;}
+#bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,12,18,0.97);border-top:1px solid var(--border2);display:none;z-index:300;backdrop-filter:blur(12px);}
+#bottom-nav.show{display:flex;}
+.bn-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 4px;background:none;border:none;color:var(--text3);cursor:pointer;font-family:var(--dm);font-size:8px;letter-spacing:0.5px;transition:color 0.15s;}
+.bn-btn:hover,.bn-btn.active{color:var(--liberty);}
+.bn-icon{font-size:18px;display:block;}
+.stimulus-block{margin-bottom:16px;background:var(--bg2);border:1px solid var(--border2);overflow:hidden;}
+.stimulus-img{width:100%;max-height:320px;object-fit:contain;display:block;cursor:zoom-in;background:#0a0f18;}
+.stimulus-caption{font-family:var(--dm);font-size:10px;color:var(--text3);padding:8px 12px;border-top:1px solid var(--border);font-style:italic;line-height:1.5;}
+.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:600;align-items:center;justify-content:center;padding:20px;}
+.img-modal.show{display:flex;animation:fadeIn 0.2s;}
+.img-modal img{max-width:100%;max-height:90vh;object-fit:contain;border:1px solid var(--border2);}
+.img-modal-close{position:absolute;top:16px;right:16px;font-family:var(--dm);font-size:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:7px 14px;cursor:pointer;z-index:10;}
+.q-card{background:var(--bg2);border:1px solid var(--border2);padding:18px;margin-bottom:14px;}
+.q-text{font-family:var(--playfair);font-size:15px;color:var(--cream);line-height:1.65;margin-bottom:18px;}
+.progress-bar-wrap{height:3px;background:rgba(255,255,255,0.04);margin-bottom:16px;}
+.progress-bar-fill{height:100%;background:var(--gold2);transition:width 0.4s;border-radius:2px;}
+.q-meta{font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:2px;text-align:right;margin-bottom:12px;}
+.diff-pill{display:inline-block;font-family:var(--dm);font-size:7px;letter-spacing:1px;padding:2px 7px;border:1px solid;border-radius:2px;margin-left:6px;vertical-align:middle;}
+.diff-low{color:#38a050;border-color:#38a050;}
+.diff-moderate{color:#d4a017;border-color:#d4a017;}
+.diff-high{color:#e04040;border-color:#e04040;}
+.sec-complete-block{background:var(--bg2);border:1px solid var(--liberty2);padding:20px;margin-bottom:14px;}
+.sec-score-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0;}
+.sec-score-cell{background:var(--bg3);border:1px solid var(--border);padding:12px;text-align:center;}
+.sec-score-val{font-family:var(--bebas);font-size:24px;color:var(--liberty);}
+.sec-score-lbl{font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px;margin-top:2px;}
+.final-section-row{background:var(--bg2);border:1px solid var(--border2);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.tier-block{padding:20px;text-align:center;margin:16px 0;border:1px solid;}
+.tier-label{font-family:var(--bebas);font-size:32px;letter-spacing:3px;}
+.tier-desc{font-family:var(--crimson);font-size:14px;margin-top:8px;font-style:italic;line-height:1.6;}
+.game-logo{font-family:var(--bebas);font-size:clamp(32px,8vw,54px);color:var(--parchment);letter-spacing:4px;text-shadow:0 0 40px rgba(232,213,160,0.3),3px 3px 0 rgba(0,0,0,0.6);line-height:1;margin-bottom:4px;}
+.game-subtitle{font-family:var(--playfair);font-size:14px;color:var(--liberty3);font-style:italic;margin-bottom:6px;letter-spacing:1px;}
+.game-unit-badge{display:inline-block;background:rgba(74,159,212,0.08);border:1px solid var(--liberty2);color:var(--liberty);font-family:var(--dm);font-size:9px;padding:4px 12px;letter-spacing:3px;margin-bottom:1.5rem;text-transform:uppercase;}
+.hub-banner{background:var(--bg2);border:1px solid var(--border2);padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.hub-avatar{width:60px;height:60px;flex-shrink:0;}
+.hub-player-name{font-family:var(--playfair);font-size:16px;color:var(--cream);font-style:italic;margin-bottom:2px;}
+.hub-player-rank{font-family:var(--dm);font-size:11px;color:var(--liberty3);margin-bottom:6px;}
+.code-gate-overlay{display:none;position:fixed;inset:0;background:rgba(8,12,18,0.98);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.code-gate-overlay.show{display:flex;}
+.code-gate-inner{background:var(--bg2);border:1px solid var(--border2);padding:28px 24px;width:100%;max-width:400px;}
+.welcome-gate{display:none;position:fixed;inset:0;background:rgba(8,12,18,0.98);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.welcome-gate.show{display:flex;}
+.welcome-inner{background:var(--bg2);border:1px solid var(--border2);padding:28px 24px;width:100%;max-width:400px;text-align:center;}
+#question-screen,#section-intro-screen,#section-summary-screen,#final-screen,
+.choice-btn,.q-card,.stimulus-block{-webkit-user-select:none;-moz-user-select:none;user-select:none;}
+input{-webkit-user-select:text!important;user-select:text!important;}
+</style>
+</head>
+<body>
+<div id="root">
+
+<div id="game-header">
+  <div class="hud-inner">
+    <div class="hud-avatar" id="hud-avatar-svg" onclick="openProfile()"></div>
+    <div class="hud-info">
+      <div class="hud-name" id="hud-name">--</div>
+      <div class="hud-rank" id="hud-rank">Curious Citizen</div>
+    </div>
+    <div class="hud-stats">
+      <div class="hud-stat">SCORE<span id="hud-score">0</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TITLE SCREEN -->
+<div class="screen active" id="title-screen">
+  <div style="position:relative;width:100%;height:220px;overflow:hidden;border:1px solid var(--border2);margin-bottom:20px;background:var(--bg2)">
+    <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:220px">
+      <defs><radialGradient id="skyGM" cx="50%" cy="0%" r="80%"><stop offset="0%" stop-color="#0a1828"/><stop offset="100%" stop-color="#050810"/></radialGradient></defs>
+      <rect width="560" height="220" fill="url(#skyGM)"/>
+      <circle cx="60" cy="25" r="1.2" fill="#e8dcc8" opacity="0.6"/><circle cx="200" cy="30" r="1" fill="#e8dcc8" opacity="0.7"/>
+      <circle cx="320" cy="18" r="1.2" fill="#e8dcc8" opacity="0.5"/><circle cx="500" cy="12" r="1.1" fill="#e8dcc8" opacity="0.4"/>
+      <rect x="220" y="100" width="120" height="90" fill="#0e1a28" stroke="#1a2a3a" stroke-width="1"/>
+      <ellipse cx="280" cy="98" rx="55" ry="30" fill="#0d1820" stroke="#1a2a3a" stroke-width="1"/>
+      <ellipse cx="280" cy="80" rx="35" ry="22" fill="#0c1520" stroke="#1a2a3a" stroke-width="1"/>
+      <rect x="270" y="38" width="20" height="50" fill="#0e1a28"/>
+      <ellipse cx="280" cy="36" rx="14" ry="14" fill="#0d1520" stroke="#1a2a3a" stroke-width="1"/>
+      <rect x="235" y="130" width="6" height="60" fill="#0d1520"/><rect x="252" y="130" width="6" height="60" fill="#0d1520"/>
+      <rect x="302" y="130" width="6" height="60" fill="#0d1520"/><rect x="319" y="130" width="6" height="60" fill="#0d1520"/>
+      <rect x="60" y="80" width="80" height="100" rx="3" fill="#1a160a" stroke="#3a2e10" stroke-width="1"/>
+      <rect x="64" y="84" width="72" height="92" rx="1" fill="#1e1a0c"/>
+      <text x="100" y="102" font-family="Georgia,serif" font-size="6.5" fill="#c9b67a" text-anchor="middle" font-style="italic">Assessment</text>
+      <line x1="70" y1="110" x2="130" y2="110" stroke="#3a2e10" stroke-width="0.8"/>
+      <line x1="70" y1="120" x2="125" y2="120" stroke="#3a2e10" stroke-width="0.8"/>
+      <line x1="70" y1="130" x2="128" y2="130" stroke="#3a2e10" stroke-width="0.8"/>
+      <ellipse cx="420" cy="175" rx="8" ry="9" fill="#2a1005"/><rect x="413" y="183" width="14" height="17" fill="#3a2a1a"/>
+      <ellipse cx="448" cy="172" rx="8" ry="9" fill="#c09060"/><rect x="441" y="180" width="14" height="17" fill="#1a2a4a"/>
+      <ellipse cx="475" cy="175" rx="8" ry="9" fill="#3d1a0a"/><rect x="468" y="183" width="14" height="17" fill="#2a3a2a"/>
+      <text x="280" y="214" font-family="Georgia,serif" font-size="8.5" fill="#4a6a3a" text-anchor="middle" opacity="0.8">Midterm EOC Checkpoint -- American Chronicles</text>
+    </svg>
+  </div>
+  <div style="text-align:center">
+    <div class="game-unit-badge">Cumulative Readiness Assessment</div>
+    <div class="game-logo">Midterm EOC<br>Checkpoint</div>
+    <div class="game-subtitle">Three Sections &middot; 30 Questions &middot; Full Readiness Review</div>
+    <div class="deco-divider"><span class="deco-divider-icon">&#128203;</span></div>
+    <div style="background:linear-gradient(135deg,rgba(212,160,23,0.06),rgba(212,160,23,0.02));border:1px solid var(--border2);border-left:3px solid var(--gold);padding:14px 16px;text-align:left;margin-bottom:20px">
+      <div style="font-family:var(--bebas);font-size:10px;color:var(--gold2);letter-spacing:2px;margin-bottom:6px">WHAT TO EXPECT</div>
+      <div style="font-family:var(--crimson);font-size:15px;color:var(--text2);line-height:1.7">This checkpoint covers all three units of the course. You will complete <strong style="color:var(--parchment3)">10 questions per section</strong>, drawn randomly from a bank of 30. Questions include stimulus-based prompts, data analysis, and conceptual reasoning.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:12px 8px;text-align:center"><div style="font-size:24px;margin-bottom:4px">&#127963;</div><div style="font-family:var(--bebas);font-size:10px;color:var(--liberty);letter-spacing:1px">Section 1</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);margin-top:2px">1860-1910</div></div>
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:12px 8px;text-align:center"><div style="font-size:24px;margin-bottom:4px">&#127760;</div><div style="font-family:var(--bebas);font-size:10px;color:var(--liberty);letter-spacing:1px">Section 2</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);margin-top:2px">1890-1940</div></div>
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:12px 8px;text-align:center"><div style="font-size:24px;margin-bottom:4px">&#9883;</div><div style="font-family:var(--bebas);font-size:10px;color:var(--liberty);letter-spacing:1px">Section 3</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);margin-top:2px">1940-Present</div></div>
+    </div>
+    <button class="btn full gold" style="font-size:16px;padding:16px" onclick="showLoginGate()"><span>Begin Assessment &#128203;</span></button>
+    <button class="btn full" style="margin-top:6px;border-color:var(--border2);color:var(--text2);font-size:11px" onclick="showTeacherDashboard()"><span>&#128202; Teacher View</span></button>
+    <div style="font-family:var(--dm);font-size:9px;color:var(--text3);margin-top:20px;letter-spacing:1px">MIDTERM EOC CHECKPOINT &middot; SS.912.A STANDARDS</div>
+    <div style="font-family:var(--dm);font-size:9px;color:var(--text3);margin-top:6px;letter-spacing:1px">CREATED BY JOSHUA OLSON</div>
+  </div>
+</div>
+
+<!-- SECTION INTRO -->
+<div class="screen" id="section-intro-screen">
+  <div id="section-intro-content"></div>
+  <button class="btn full gold" id="section-start-btn" onclick="startSection()"><span>Begin Section &rarr;</span></button>
+</div>
+
+<!-- QUESTION SCREEN -->
+<div class="screen" id="question-screen">
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="q-progress-fill" style="width:0%"></div></div>
+  <div class="q-meta" id="q-meta"></div>
+  <div id="stimulus-container"></div>
+  <div class="q-card">
+    <div class="q-text" id="q-text"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+  </div>
+</div>
+
+<!-- SECTION SUMMARY -->
+<div class="screen" id="section-summary-screen">
+  <div id="section-summary-content"></div>
+  <div id="section-summary-next-btn"></div>
+</div>
+
+<!-- FINAL RESULTS -->
+<div class="screen" id="final-screen">
+  <div id="final-results-content"></div>
+</div>
+
+<!-- HUB -->
+<div class="screen" id="hub-screen">
+  <div id="hub-banner-container"></div>
+  <div id="shell-return-btn" style="display:none;margin-bottom:12px">
+    <button class="btn full" onclick="returnToShell()" style="border-color:var(--liberty2);color:var(--liberty2)"><span>&larr; Return to American Chronicles Hub</span></button>
+  </div>
+  <div class="section-head">Midterm EOC Checkpoint</div>
+  <div style="background:linear-gradient(135deg,rgba(212,160,23,0.06),rgba(212,160,23,0.02));border:1px solid var(--border2);border-left:3px solid var(--gold);padding:14px 16px;margin-bottom:16px;">
+    <div style="font-family:var(--bebas);font-size:10px;color:var(--gold2);letter-spacing:2px;margin-bottom:4px">ASSESSMENT OVERVIEW</div>
+    <div style="font-family:var(--crimson);font-size:15px;color:var(--text2);line-height:1.7">Complete all three sections to receive your full performance report. Each section draws 10 questions randomly from a bank of 30.</div>
+  </div>
+  <div id="hub-sections-list"></div>
+  <div class="deco-divider"><span class="deco-divider-icon">&#128203;</span></div>
+  <button class="btn full gold" id="hub-start-btn" onclick="launchCheckpoint()" style="font-size:15px;padding:15px"><span id="hub-start-label">Begin Checkpoint &rarr;</span></button>
+  <button class="btn full" onclick="returnToShell()" style="margin-top:6px;border-color:var(--border2);color:var(--text2);font-size:11px"><span>&larr; Return to American Chronicles Hub</span></button>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="overlay" id="leaderboard-overlay">
+  <div class="overlay-header">
+    <div class="overlay-title">Leaderboard</div>
+    <button class="overlay-close" onclick="document.getElementById('leaderboard-overlay').classList.remove('show')">X Close</button>
+  </div>
+  <div style="margin-bottom:12px">
+    <button id="lb-tab-all" class="lb-tab active" onclick="setLBPeriod('all')">Overall</button>
+    <button id="lb-tab-class" class="lb-tab" onclick="setLBPeriod('class')">My Class</button>
+    <button id="lb-teacher-unlock" onclick="unlockLBDelete()" style="font-family:var(--dm);font-size:8px;background:transparent;border:1px solid var(--border2);color:var(--text3);padding:4px 8px;cursor:pointer">Lock</button>
+  </div>
+  <div id="lb-content"></div>
+</div>
+
+<!-- PROFILE -->
+<div class="overlay" id="profile-overlay">
+  <div class="overlay-header">
+    <div class="overlay-title">Profile</div>
+    <button class="overlay-close" onclick="document.getElementById('profile-overlay').classList.remove('show')">X Close</button>
+  </div>
+  <div id="profile-content"></div>
+</div>
+
+<!-- TEACHER DASHBOARD -->
+<div class="overlay" id="teacher-overlay">
+  <div class="overlay-header">
+    <div class="overlay-title">Teacher Dashboard</div>
+    <button class="overlay-close" onclick="document.getElementById('teacher-overlay').classList.remove('show')">X Close</button>
+  </div>
+  <div id="teacher-content"></div>
+</div>
+
+<!-- LOGIN GATE -->
+<div class="code-gate-overlay" id="code-gate-overlay">
+  <div class="code-gate-inner">
+    <div id="login-step-1">
+      <div style="font-family:var(--bebas);font-size:22px;color:var(--liberty);letter-spacing:3px;margin-bottom:6px">SELECT YOUR TEACHER</div>
+      <div style="font-family:var(--crimson);font-size:14px;color:var(--text2);font-style:italic;margin-bottom:20px">Who is your U.S. History teacher?</div>
+      <button class="btn full" onclick="selectTeacher('olson')" style="margin-bottom:8px"><span>Mr. Olson</span></button>
+      <button class="btn full" onclick="selectTeacher('guest')" style="border-color:var(--border2);color:var(--text3);font-size:11px"><span>Guest / Other</span></button>
+    </div>
+    <div id="login-step-2" style="display:none">
+      <div style="font-family:var(--bebas);font-size:18px;color:var(--liberty);letter-spacing:2px;margin-bottom:12px">SELECT YOUR PERIOD</div>
+      <div id="period-buttons" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"></div>
+    </div>
+    <div id="login-step-3" style="display:none">
+      <div id="login-step3-label" style="font-family:var(--crimson);font-size:14px;color:var(--text2);font-style:italic;margin-bottom:16px"></div>
+      <input id="class-code-input" type="text" placeholder="Your name..." maxlength="40"
+        style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:12px 14px;font-family:var(--dm);font-size:14px;margin-bottom:8px;outline:none"
+        onkeydown="if(event.key==='Enter')submitClassCode()">
+      <div id="code-error" style="font-family:var(--dm);font-size:10px;color:var(--red2);margin-bottom:8px"></div>
+      <button class="btn full gold" onclick="submitClassCode()"><span>Enter &rarr;</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- WELCOME GATE -->
+<div class="welcome-gate" id="welcome-gate">
+  <div class="welcome-inner">
+    <div id="wg-avatar" style="width:60px;height:60px;margin:0 auto 12px"></div>
+    <div id="wg-name" style="font-family:var(--playfair);font-size:18px;color:var(--cream);font-style:italic"></div>
+    <div id="wg-detail" style="font-family:var(--dm);font-size:10px;color:var(--liberty3);margin:4px 0"></div>
+    <div id="wg-progress" style="font-family:var(--dm);font-size:10px;color:var(--text3);margin-bottom:20px"></div>
+    <button class="btn full gold" onclick="welcomeContinue()"><span>Continue &rarr;</span></button>
+    <button class="btn full" onclick="welcomeNewPlayer()" style="border-color:var(--border2);color:var(--text3);font-size:10px;margin-top:4px"><span>Switch Player</span></button>
+  </div>
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="img-modal" id="img-modal" onclick="closeImgModal()">
+  <button class="img-modal-close">X Close</button>
+  <img id="img-modal-src" src="" alt="">
+</div>
+
+<!-- BOTTOM NAV -->
+<div id="bottom-nav">
+  <button class="bn-btn" id="nav-0" onclick="setActiveNav(0);showScreen('hub-screen')"><span class="bn-icon">&#127968;</span>Hub</button>
+  <button class="bn-btn" id="nav-1" onclick="setActiveNav(1);openLeaderboard()"><span class="bn-icon">&#127942;</span>Scores</button>
+  <button class="bn-btn" id="nav-2" onclick="setActiveNav(2);openProfile()"><span class="bn-icon">&#128100;</span>Profile</button>
+</div>
+
+</div>
+
+<script>
+
+var SAVE_KEY = 'ac_midterm_checkpoint_save';
+var SHELL_KEY = 'ac_shell_state';
+var SHELL_UNIT_ID = 'eoc_midterm';
+var AC_SUPA_URL = 'https://dnmrwglrcvlbamzhlzlx.supabase.co';
+var AC_SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRubXJ3Z2xyY3ZsYmFtemhsemx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NjA2OTEsImV4cCI6MjA4OTQzNjY5MX0.jEIM-dGgB0cUS0A6w31LJ5AK9QDCS_UqdVnPrb8dlXM';
+var AC_HEADERS = {'Content-Type':'application/json','apikey':AC_SUPA_KEY,'Authorization':'Bearer '+AC_SUPA_KEY};
+var TEACHERS = {olson:{name:'Mr. Olson',periods:['1','2','3','4','5','6','7'],teacherCode:'OLSON219'}};
+
+var SECTIONS = [
+  {num:1, title:'Foundations of Modern America', era:'1860-1910', icon:'&#127963;',
+   desc:'From Reconstruction to the Progressive Era - the Civil War legacy, industrialization, immigration, and reform movements that reshaped the nation.',
+   standards:'SS.912.A.3.1, SS.912.A.3.2, SS.912.A.3.3, SS.912.A.3.4'},
+  {num:2, title:'America on the World Stage', era:'1890-1940', icon:'&#127760;',
+   desc:'From imperialism to isolation - the Spanish-American War, World War I, the Roaring Twenties, the Great Depression, and the New Deal.',
+   standards:'SS.912.A.4.1, SS.912.A.4.2, SS.912.A.4.4, SS.912.A.5.1, SS.912.A.5.5'},
+  {num:3, title:'Modern America', era:'1940-Present', icon:'&#9883;',
+   desc:'World War II through the present - the Cold War, civil rights, Vietnam, and the transformation of American society and policy.',
+   standards:'SS.912.A.6.1, SS.912.A.6.4, SS.912.A.7.1, SS.912.A.7.5, SS.912.A.7.8'}
+];
+
+var QUESTION_BANK = [{"id":"sec1_q01","section":1,"difficulty":"low","stimulus_type":"image","stimulus_path":"assets/images/sec1_scotts_great_snake_01.png","stimulus_caption":"Scott's Great Snake map illustrating Union strategy during the Civil War.","question":"The map above illustrated a Union strategy during the Civil War.  What was the main goal of this strategy?","choices":["to divide the Confederacy by controlling a major river","to convince Britain and France to support the Union","to spread antislavery laws into western territories","to reduce manufacturing in the northern states"],"correct_answer":"A","explanation":"The Anaconda Plan aimed to split the Confederacy and cut off resources by controlling the Mississippi River."},{"id":"sec1_q02","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A southern leader claimed that a state could reject federal authority when national policies threatened its interests.  Which development followed most directly from this idea?","choices":["southern states left the Union","factory workers formed labor unions","reformers opened settlement houses","Congress passed civil service laws"],"correct_answer":"A","explanation":"States' rights arguments, especially about slavery, helped drive secession."},{"id":"sec1_q03","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which goal was most important to Radical Republicans during Reconstruction?","choices":["restoring office to former Confederate leaders","protecting rights of formerly enslaved people","reducing the power of the national government","expanding industry across the former Confederacy"],"correct_answer":"B","explanation":"Radical Republicans pushed for strong federal protection of freedpeople's rights."},{"id":"sec1_q04","section":1,"difficulty":"moderate","stimulus_type":"image","stimulus_path":"assets/images/sec1_child_labor_PC.png","stimulus_caption":"Political cartoon criticizing child labor conditions during industrialization.","question":"The cartoon above criticized conditions during the late 1800s.  Which problem did reformers most directly target?","choices":["unsafe work done by children","falling prices for farm crops","limits on voting by women","conflict over land in the West"],"correct_answer":"A","explanation":"Progressive reformers targeted child labor and unsafe industrial working conditions."},{"id":"sec1_q05","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A farmer in the late 1800s complained about debt, low crop prices, and high railroad shipping costs.  Which movement formed most directly in response to these concerns?","choices":["the temperance movement","the Populist movement","the abolitionist movement","the conservation movement"],"correct_answer":"B","explanation":"The Populist movement grew from farmers' economic struggles."},{"id":"sec1_q06","section":1,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which development most affected Chinese immigrants in the late 1800s?","choices":["Congress restricted immigration from China","western states expanded voting rights","labor unions recruited Asian workers","railroad companies offered free land grants"],"correct_answer":"A","explanation":"The Chinese Exclusion Act limited immigration from China."},{"id":"sec1_q07","section":1,"difficulty":"high","stimulus_type":"image","stimulus_path":"assets/images/sec1_nast_tiger_PC.png","stimulus_caption":"Thomas Nast cartoon criticizing corruption in urban machine politics.","question":"What criticism did the cartoon most clearly express?","choices":["city governments were controlled by corruption","national courts favored wealthy landowners","farm groups dominated state elections","labor unions weakened industrial growth"],"correct_answer":"A","explanation":"The cartoon symbolizes machine corruption in cities such as New York under Tammany Hall."},{"id":"sec1_q08","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Factory workers organized strikes in the late 1800s to demand higher pay, fewer hours, and safer conditions.  What was the main purpose of these strikes?","choices":["to improve wages and working conditions","to expand settlement in western territories","to increase trade with foreign countries","to reduce immigration into large cities"],"correct_answer":"A","explanation":"Labor unions and strikes focused on wages, hours, and safety."},{"id":"sec1_q09","section":1,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"What was the main purpose of settlement houses such as Hull House?","choices":["to assist immigrants and the urban poor","to supervise elections in major cities","to regulate safety in large factories","to settle disputes between railroad companies"],"correct_answer":"A","explanation":"Settlement houses provided education, childcare, and support services in immigrant neighborhoods."},{"id":"sec1_q10","section":1,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that Reconstruction changed the Constitution but did not fully protect African Americans from oppression in everyday life.  Which factor best explains that conclusion?","choices":["segregation laws limited those new protections","labor strikes weakened congressional authority","foreign trade reduced federal tax revenue","political parties disappeared in the South"],"correct_answer":"A","explanation":"Black Codes and later Jim Crow laws undercut Reconstruction-era gains."},{"id":"sec1_q11","section":1,"difficulty":"moderate","stimulus_type":"image","stimulus_path":"assets/images/sec1_tenements_pic.png","stimulus_caption":"Photo of crowded urban tenement housing in the late 1800s.","question":"The image above shows living conditions in many cities during the late 1800s.  Which development most directly resulted from these conditions?","choices":["reformers created settlement houses to assist residents","farmers moved west to expand agricultural production","businesses increased trade with foreign markets","railroads expanded routes across the Midwest"],"correct_answer":"A","explanation":"Poor urban living conditions helped inspire reform movements and settlement houses."},{"id":"sec1_q12","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"An immigrant family arrived in the United States and settled in a crowded city neighborhood where jobs were available but housing was poor.  Which factor most likely influenced this decision?","choices":["access to industrial jobs in urban areas","availability of free land in western territories","support from federal agricultural programs","enforcement of strict immigration quotas"],"correct_answer":"A","explanation":"Many immigrants settled in cities because industrial jobs were available there."},{"id":"sec1_q13","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A former Confederate state tried to deny citizenship rights to formerly enslaved people after the Civil War.  Which constitutional change most directly challenged that effort?","choices":["the amendment that ended slavery","the amendment that defined national citizenship","the amendment that lowered the voting age","the amendment that guaranteed women's suffrage"],"correct_answer":"B","explanation":"The Fourteenth Amendment defined citizenship and provided equal protection."},{"id":"sec1_q14","section":1,"difficulty":"high","stimulus_type":"image","stimulus_path":"assets/images/sec1_population_AFAM_1880-1930.png","stimulus_caption":"Table showing changes in African American population across cities over time.","question":"The data above shows changes in population over time.  Which conclusion is best supported by this data?","choices":["African Americans increasingly moved to northern cities","southern agricultural production declined sharply","immigration from Europe decreased significantly","industrial output slowed during this period"],"correct_answer":"A","explanation":"The table supports a conclusion about demographic change and migration to northern cities."},{"id":"sec1_q15","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A business owner formed a large company that controlled most of an industry and eliminated competition.  Which term best describes this practice?","choices":["monopoly","union","tariff","boycott"],"correct_answer":"A","explanation":"A monopoly exists when one company dominates an industry and limits competition."},{"id":"sec1_q16","section":1,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Workers in a large factory organized together to demand shorter hours and safer conditions.  What kind of organization were they most likely joining?","choices":["a labor union","a political machine","a settlement house","a business trust"],"correct_answer":"A","explanation":"Labor unions organized workers to bargain for better conditions."},{"id":"sec1_q17","section":1,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that industrialization led to both economic growth and social problems in American cities.  Which evidence best supports this claim?","choices":["factories increased production while working conditions remained unsafe","farmers gained access to cheaper transportation networks","western territories experienced rapid population growth","international trade expanded during this period"],"correct_answer":"A","explanation":"Industrialization boosted production, but often at the cost of worker safety and living conditions."},{"id":"sec1_q18","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which effect did the Fifteenth Amendment have on American society?","choices":["it granted voting rights regardless of race","it ended slavery in all states","it provided citizenship to formerly enslaved people","it established equal protection under the law"],"correct_answer":"A","explanation":"The Fifteenth Amendment prohibited denying the vote on the basis of race."},{"id":"sec1_q19","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A city government relied on a political organization that provided jobs and services in exchange for votes.  Which term best describes this system?","choices":["political machine","labor union","reform movement","federal agency"],"correct_answer":"A","explanation":"Political machines exchanged favors and services for political support."},{"id":"sec1_q20","section":1,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A reformer believed that government should take a more active role in regulating business and improving social conditions.  This belief was most closely associated with which movement?","choices":["the Progressive movement","the abolitionist movement","the Populist movement","the nativist movement"],"correct_answer":"A","explanation":"Progressives supported an active government role in addressing social and economic problems."},{"id":"sec1_q21","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"After the Civil War, Congress sought to make emancipation permanent through a constitutional change.  Which amendment achieved that goal?","choices":["the amendment ending slavery","the amendment defining citizenship","the amendment protecting voting rights regardless of race","the amendment authorizing an income tax"],"correct_answer":"A","explanation":"The Thirteenth Amendment abolished slavery."},{"id":"sec1_q22","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"After the Civil War, southern states passed laws that limited the rights of African Americans and restricted their economic opportunities.  Which term best describes these laws?","choices":["Black Codes","Jim Crow laws","Homestead laws","Antitrust laws"],"correct_answer":"A","explanation":"Black Codes were enacted immediately after the Civil War to restrict freedpeople's rights."},{"id":"sec1_q23","section":1,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A farmer supported the free coinage of silver to increase the money supply and reduce debt.  Which problem was the farmer trying to address?","choices":["high interest rates and falling crop prices","limited access to industrial jobs","declining immigration into rural areas","increased competition from foreign factories"],"correct_answer":"A","explanation":"Free silver was meant to ease debt burdens and help indebted farmers facing low prices."},{"id":"sec1_q24","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Nativist groups in the late 1800s argued that some immigrant groups threatened jobs and social stability.  Which federal action most clearly reflected this attitude?","choices":["a law restricting immigration from China","a law regulating railroad shipping rates","a law promoting settlement in western territories","a law breaking up monopolies in industry"],"correct_answer":"A","explanation":"The Chinese Exclusion Act reflected anti-immigrant nativist attitudes."},{"id":"sec1_q25","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A Native American group was forced onto a reservation and encouraged to adopt farming and private land ownership.  Which policy does this situation best describe?","choices":["assimilation policies toward Native Americans","expansion of industrial labor opportunities","growth of political machines in cities","development of railroad monopolies"],"correct_answer":"A","explanation":"Federal policy often pushed assimilation and private land ownership on Native Americans."},{"id":"sec1_q26","section":1,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that Reconstruction created lasting constitutional change but failed to bring full equality in practice.  Which evidence best supports this argument?","choices":["segregation laws limited rights despite new amendments","industrial growth increased in northern cities","farmers gained access to new transportation systems","immigration increased in urban areas"],"correct_answer":"A","explanation":"Legal protections expanded, but segregation and discrimination persisted."},{"id":"sec1_q27","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A reformer opened a neighborhood center in a crowded immigrant district to provide classes, childcare, and other services.  What type of institution was this most likely?","choices":["a settlement house","a labor union hall","a political ward office","a federal land office"],"correct_answer":"A","explanation":"Settlement houses offered social services and education in urban immigrant neighborhoods."},{"id":"sec1_q28","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A business leader argued that government should not interfere with economic competition and that success depended on individual ability.  Which idea does this argument reflect?","choices":["laissez-faire economics","collective bargaining","civil service reform","populism"],"correct_answer":"A","explanation":"Laissez-faire ideas favored minimal government interference in the economy."},{"id":"sec1_q29","section":1,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A worker joined an organization that negotiated with employers for better pay and safer conditions.  What type of organization did the worker most likely join?","choices":["a labor union","a political machine","a settlement house","a reform commission"],"correct_answer":"A","explanation":"Labor unions negotiated with employers on behalf of workers."},{"id":"sec1_q30","section":1,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A reformer argued that rapid industrial growth created wealth but also increased inequality and unsafe conditions.  Which conclusion best reflects this argument?","choices":["industrialization produced both benefits and social problems","industrialization reduced the need for government action","industrialization ended economic competition","industrialization limited urban population growth"],"correct_answer":"A","explanation":"Industrialization expanded production and wealth while also worsening many social problems."},{"id":"sec2_q01","section":2,"difficulty":"low","stimulus_type":"image","stimulus_path":"assets/images/sec1_maine_headline.png","stimulus_caption":"Newspaper headline connected to the USS Maine and the Spanish-American War.","question":"The headline above reflects reporting from the late 1800s.  What effect did this type of reporting have on the United States?","choices":["it increased public support for war with Spain","it encouraged immigration from Europe","it reduced tensions with foreign nations","it promoted trade with Latin America"],"correct_answer":"A","explanation":"Sensational reporting about Cuba and the USS Maine helped build public support for war."},{"id":"sec2_q02","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A newspaper published exaggerated stories about events in Cuba to influence public opinion in the United States.  What was the most likely purpose of this reporting?","choices":["to increase support for military action against Spain","to promote trade agreements with European nations","to encourage settlement in western territories","to reduce tensions between foreign governments"],"correct_answer":"A","explanation":"Yellow journalism aimed to shape public opinion and push the United States toward intervention."},{"id":"sec2_q03","section":2,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which development most directly contributed to the outbreak of the Spanish-American War?","choices":["destruction of a U.S. battleship near Cuba","expansion of railroads across the Midwest","increased immigration into northern cities","formation of labor unions in industrial areas"],"correct_answer":"A","explanation":"The sinking of the USS Maine became a major trigger for war."},{"id":"sec2_q04","section":2,"difficulty":"moderate","stimulus_type":"image","stimulus_path":"assets/images/sec1_big_stick_PC.png","stimulus_caption":"Political cartoon representing Theodore Roosevelt's Big Stick diplomacy.","question":"The cartoon above represents U.S. foreign policy in the early 1900s.  Which idea is best reflected in this image?","choices":["the United States used military strength to influence other nations","the United States avoided involvement in foreign conflicts","the United States promoted equal trade agreements worldwide","the United States reduced its influence in Latin America"],"correct_answer":"A","explanation":"Big Stick diplomacy relied on the implied use of force to influence events abroad."},{"id":"sec2_q05","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"The United States supported the construction of the Panama Canal to improve global trade.  What was the main benefit of this canal?","choices":["it reduced travel time between the Atlantic and Pacific Oceans","it increased immigration into the United States","it expanded farmland in Central America","it strengthened European control of trade routes"],"correct_answer":"A","explanation":"The canal created a shorter shipping route between the Atlantic and Pacific."},{"id":"sec2_q06","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which factor most influenced the United States to enter World War I?","choices":["attacks on American ships by German submarines","competition with European nations for western land","conflicts over labor conditions in urban factories","disputes about voting rights during Reconstruction"],"correct_answer":"A","explanation":"Unrestricted submarine warfare pushed the United States toward war."},{"id":"sec2_q07","section":2,"difficulty":"high","stimulus_type":"image","stimulus_path":"assets/images/sec2_unemployment_30-45.png","stimulus_caption":"Graph showing unemployment levels from the Great Depression through World War II.","question":"The graph above shows unemployment levels over time.  Which conclusion is best supported by this data?","choices":["unemployment rose sharply during the Great Depression","industrial production increased steadily","wages remained stable during economic decline","immigration increased during economic hardship"],"correct_answer":"A","explanation":"The graph indicates a sharp spike in unemployment during the Depression before later decline."},{"id":"sec2_q08","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"During World War I, the government used posters, speeches, and media campaigns to influence public opinion.  What was the main purpose of these efforts?","choices":["to gain support for the war effort","to increase industrial competition","to reduce immigration into cities","to expand agricultural production"],"correct_answer":"A","explanation":"Propaganda campaigns were used to win support for the war and home-front sacrifices."},{"id":"sec2_q09","section":2,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which group experienced increased employment opportunities during World War I?","choices":["women entering industrial jobs","farmers relocating to cities","immigrants leaving the United States","business owners moving overseas"],"correct_answer":"A","explanation":"World War I opened more industrial jobs to women."},{"id":"sec2_q10","section":2,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that the New Deal changed how the federal government interacted with the economy.  Which example best supports this argument?","choices":["creation of programs that regulated banks and provided jobs","expansion of private control over industrial production","reduction of federal involvement in economic planning","elimination of government-funded public projects"],"correct_answer":"A","explanation":"New Deal programs expanded federal responsibility for economic regulation and relief."},{"id":"sec2_q11","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"The United States gained overseas territories following a war with Spain in 1898.  Which outcome resulted from this conflict?","choices":["the United States acquired territories in the Caribbean and Pacific","the United States withdrew from international trade agreements","the United States reduced its military presence abroad","the United States granted independence to all territories immediately"],"correct_answer":"A","explanation":"The Spanish-American War led to U.S. control of places such as Puerto Rico, Guam, and the Philippines."},{"id":"sec2_q12","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"After World War I, many Americans opposed joining alliances that might pull the United States into future wars overseas.  Which position did this view most strongly reflect?","choices":["isolationism","imperialism","progressivism","collective security"],"correct_answer":"A","explanation":"Isolationists wanted to avoid commitments that could drag the United States into new foreign wars."},{"id":"sec2_q13","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A nation expanded its influence by gaining control of territories and increasing its presence in global trade.  Which policy does this situation best describe?","choices":["imperialism","federalism","nativism","progressivism"],"correct_answer":"A","explanation":"Imperialism involves extending a nation's power through territories and influence abroad."},{"id":"sec2_q14","section":2,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Many Americans later criticized the peace settlement after World War I because they believed it created resentment and instability in Europe.  Which agreement was at the center of that criticism?","choices":["the Treaty of Versailles","the Treaty of Paris","the Open Door Policy","the Roosevelt Corollary"],"correct_answer":"A","explanation":"The Treaty of Versailles ended World War I and was often blamed for creating future instability."},{"id":"sec2_q15","section":2,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"After World War I, many Americans opposed joining international organizations that might involve the United States in future conflicts.  Which position does this view reflect?","choices":["isolationism","containment","expansionism","interventionism"],"correct_answer":"A","explanation":"This reflects a desire to avoid entanglement in future foreign conflicts."},{"id":"sec2_q16","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"In the 1920s, many Americans purchased goods using credit instead of cash.  How did this practice contribute to later economic problems?","choices":["it increased debt levels when incomes declined","it reduced the number of available consumer goods","it limited industrial production across the country","it decreased trade between nations"],"correct_answer":"A","explanation":"Heavy reliance on credit left many consumers vulnerable during economic downturns."},{"id":"sec2_q17","section":2,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian described the 1920s as a decade transformed by mass production, consumer credit, and new patterns of daily life.  Which industry best symbolized those changes?","choices":["automobile manufacturing","cotton sharecropping","small-scale blacksmithing","subsistence farming"],"correct_answer":"A","explanation":"The automobile industry symbolized mass production and consumer culture in the 1920s."},{"id":"sec2_q18","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"During the Great Depression, many workers lost jobs as businesses closed and production declined.  Which condition most directly caused this situation?","choices":["economic collapse following the stock market crash","increased demand for consumer goods","expansion of international trade","growth of industrial employment"],"correct_answer":"A","explanation":"The stock market crash contributed to wider economic collapse, business failures, and unemployment."},{"id":"sec2_q19","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which action was part of the New Deal response to the Great Depression?","choices":["creating programs to provide jobs and relief","reducing the size of the federal government","eliminating regulations on businesses","ending all public works projects"],"correct_answer":"A","explanation":"The New Deal created relief, recovery, and reform programs."},{"id":"sec2_q20","section":2,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that the New Deal increased the role of government in economic life.  Which evidence supports this claim?","choices":["the creation of programs to regulate industry and support workers","the reduction of federal involvement in banking","the elimination of economic planning policies","the expansion of private control over relief programs"],"correct_answer":"A","explanation":"Programs such as banking regulation and labor protections expanded the federal role."},{"id":"sec2_q21","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A government program built roads, schools, and other public projects to provide jobs during an economic crisis.  What was the main purpose of this program?","choices":["to reduce unemployment","to increase immigration","to expand overseas trade","to limit industrial growth"],"correct_answer":"A","explanation":"Public works programs were designed to put people back to work."},{"id":"sec2_q22","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which factor contributed to the economic collapse during the Great Depression?","choices":["widespread stock market speculation","expansion of labor protections","increased government regulation","growth of industrial wages"],"correct_answer":"A","explanation":"Speculative investing was one factor behind the stock market crash and broader collapse."},{"id":"sec2_q23","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Farmers struggled during the Great Depression due to falling prices and environmental conditions.  Which additional factor worsened their situation?","choices":["drought and soil erosion","increased industrial wages","expanded urban housing","improved transportation systems"],"correct_answer":"A","explanation":"Dust Bowl conditions worsened the Depression for many farmers."},{"id":"sec2_q24","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which goal guided many New Deal programs?","choices":["to provide relief, recovery, and reform","to reduce federal authority","to increase foreign influence","to limit economic regulation"],"correct_answer":"A","explanation":"The New Deal is often summarized by the three Rs: relief, recovery, and reform."},{"id":"sec2_q25","section":2,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A worker benefited from new laws that established minimum wages and limited working hours.  Which broader change does this example illustrate?","choices":["increased government regulation of labor","reduced influence of federal policies","expansion of private business control","decline of worker protections"],"correct_answer":"A","explanation":"New Deal-era labor policies expanded federal regulation and worker protections."},{"id":"sec2_q26","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"During World War I, industries increased production to support military needs.  Which result followed from this change?","choices":["economic growth and job opportunities expanded","agricultural production declined sharply","immigration decreased significantly","foreign trade was eliminated"],"correct_answer":"A","explanation":"War production increased industrial output and created employment opportunities."},{"id":"sec2_q27","section":2,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which group promoted reforms to address problems caused by industrialization and urbanization?","choices":["Progressives","Federalists","Loyalists","Isolationists"],"correct_answer":"A","explanation":"Progressives pushed for reforms in government, labor, and social welfare."},{"id":"sec2_q28","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A business expanded rapidly by merging with competitors and controlling supply.  What term best describes this process?","choices":["consolidation","segregation","migration","legislation"],"correct_answer":"A","explanation":"Consolidation refers to combining businesses to increase control of an industry."},{"id":"sec2_q29","section":2,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that economic growth in the 1920s hid deeper weaknesses in the economy.  Which evidence best supports this claim?","choices":["heavy reliance on credit and risky stock investments","stable wages across all industries","reduced consumer demand for goods","limited industrial expansion"],"correct_answer":"A","explanation":"Credit use and stock speculation made the economy more fragile than it appeared."},{"id":"sec2_q30","section":2,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which effect resulted from World War I on American society?","choices":["women expanded their participation in the workforce","industrial production decreased nationwide","immigration laws were eliminated","agricultural output stopped entirely"],"correct_answer":"A","explanation":"World War I increased job opportunities for women in many sectors."},{"id":"sec3_q01","section":3,"difficulty":"low","stimulus_type":"image","stimulus_path":"assets/images/sec3_duck_and_cover.png","stimulus_caption":"Cold War-era school drill image promoting duck-and-cover practice.","question":"The image above reflects a common practice during the Cold War.  What concern led to this practice?","choices":["fear of nuclear attack","concern about economic recession","conflict over immigration policy","disagreement about labor conditions"],"correct_answer":"A","explanation":"Duck-and-cover drills reflected fears of nuclear war."},{"id":"sec3_q02","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"After World War II, the United States adopted a policy to limit the spread of communism.  Which action best reflects this policy?","choices":["providing aid to countries resisting communist influence","reducing military spending in allied nations","ending trade with industrialized countries","withdrawing from international organizations"],"correct_answer":"A","explanation":"Containment often involved aiding nations threatened by communist influence."},{"id":"sec3_q03","section":3,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which conflict is considered an early military example of Cold War tensions?","choices":["Korean War","Vietnam War","Gulf War","World War I"],"correct_answer":"A","explanation":"The Korean War is often seen as the first major armed conflict of the Cold War."},{"id":"sec3_q04","section":3,"difficulty":"moderate","stimulus_type":"image","stimulus_path":"assets/images/sec3_Soviet_missile_site_in_Cuba.png","stimulus_caption":"Map showing Soviet missile sites in Cuba during the Cuban Missile Crisis.","question":"The image above relates to a major Cold War event.  What was the main concern during this event?","choices":["nuclear weapons were located near the United States","trade routes were blocked in the Caribbean","immigration increased from nearby islands","military bases were removed from Europe"],"correct_answer":"A","explanation":"The Cuban Missile Crisis centered on Soviet nuclear missiles placed in Cuba."},{"id":"sec3_q05","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"During the Cold War, the United States and the Soviet Union competed without direct large-scale conflict.  Which situation best reflects this type of conflict?","choices":["rival nations supporting opposing sides in regional wars","countries reducing military spending to avoid tension","global trade agreements eliminating competition","alliances preventing all forms of military action"],"correct_answer":"A","explanation":"The Cold War often played out through proxy wars in other countries."},{"id":"sec3_q06","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which organization was created to provide collective defense among Western nations?","choices":["NATO","Warsaw Pact","United Nations","League of Nations"],"correct_answer":"A","explanation":"NATO united the United States and Western allies in collective defense."},{"id":"sec3_q07","section":3,"difficulty":"high","stimulus_type":"image","stimulus_path":"assets/images/sec3_domino_theory.png","stimulus_caption":"Diagram illustrating domino theory during the Cold War.","question":"The diagram above illustrates a belief held during the Cold War.  What idea does this diagram represent?","choices":["the spread of communism would lead to regional instability","economic growth would increase global cooperation","democratic governments would expand rapidly","military alliances would decrease conflict"],"correct_answer":"A","explanation":"Domino theory held that one nation falling to communism could trigger regional spread."},{"id":"sec3_q08","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A country increased military spending and developed advanced weapons to match a rival nation's capabilities.  Which term best describes this situation?","choices":["arms race","d\u00e9tente","appeasement","isolationism"],"correct_answer":"A","explanation":"An arms race is competition to build up military power and weapons."},{"id":"sec3_q09","section":3,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which event marked the end of World War II?","choices":["surrender of Axis powers","invasion of Normandy","formation of the United Nations","beginning of the Cold War"],"correct_answer":"A","explanation":"World War II ended with the surrender of Germany and Japan."},{"id":"sec3_q10","section":3,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that Cold War policies increased global tension while avoiding direct conflict between superpowers.  Which evidence supports this claim?","choices":["conflicts occurred through proxy wars in other countries","trade agreements eliminated economic competition","immigration policies reduced international movement","alliances prevented all military conflict"],"correct_answer":"A","explanation":"Proxy wars allowed superpowers to compete indirectly without direct war against each other."},{"id":"sec3_q11","section":3,"difficulty":"moderate","stimulus_type":"image","stimulus_path":"assets/images/sec3_Phases_of_the_Korean War.png","stimulus_caption":"Map showing shifting control during phases of the Korean War.","question":"The map above shows changes during a conflict.  Which conclusion is best supported?","choices":["control of territory shifted during the war","economic production declined globally","immigration increased across regions","alliances were dissolved during the conflict"],"correct_answer":"A","explanation":"The map shows territorial control changing repeatedly during the Korean War."},{"id":"sec3_q12","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"During the Vietnam War, the United States increased its military involvement over time.  Which goal best explains this action?","choices":["to prevent the spread of communism in Southeast Asia","to expand economic trade with neighboring countries","to reduce military alliances in the region","to promote independence movements in Asia"],"correct_answer":"A","explanation":"U.S. involvement in Vietnam was driven by containment and fears of communist expansion."},{"id":"sec3_q13","section":3,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which movement used nonviolent protest to challenge segregation?","choices":["Civil Rights Movement","Progressive Movement","Populist Movement","Labor Movement"],"correct_answer":"A","explanation":"The Civil Rights Movement used sit-ins, marches, and boycotts to challenge segregation."},{"id":"sec3_q14","section":3,"difficulty":"high","stimulus_type":"image","stimulus_path":"assets/images/sec3_sit_ins.png","stimulus_caption":"Photo of sit-in protests during the Civil Rights Movement.","question":"The image above shows a form of protest.  What was the goal of this action?","choices":["to challenge segregation in public spaces","to expand voting rights for women","to reduce industrial production","to increase military funding"],"correct_answer":"A","explanation":"Sit-ins targeted segregation in public accommodations."},{"id":"sec3_q15","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A law prohibited discrimination in public accommodations and employment.  Which development most directly resulted from this law?","choices":["increased access to public facilities for minority groups","expansion of agricultural production in rural areas","reduction of military spending across the nation","growth of international trade agreements"],"correct_answer":"A","explanation":"The Civil Rights Act expanded access to public accommodations and employment protections."},{"id":"sec3_q16","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"During the Vietnam era, many Americans argued that people old enough to be drafted should also be allowed to vote.  Which constitutional change responded most directly to that argument?","choices":["the amendment lowering the voting age to 18","the amendment banning poll taxes","the amendment granting women's suffrage","the amendment guaranteeing birthright citizenship"],"correct_answer":"A","explanation":"The Twenty-Sixth Amendment lowered the voting age to 18."},{"id":"sec3_q17","section":3,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A protest movement opposed U.S. involvement in a war and influenced public opinion.  Which conflict is most closely associated with this movement?","choices":["Vietnam War","Korean War","World War I","Spanish-American War"],"correct_answer":"A","explanation":"Large antiwar protests became strongly associated with the Vietnam War."},{"id":"sec3_q18","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"During the Cold War, the United States pursued policies to reduce tensions with the Soviet Union.  Which action best reflects this approach?","choices":["negotiating agreements to limit nuclear weapons","increasing military involvement in regional conflicts","expanding economic sanctions on allied nations","withdrawing from global diplomatic organizations"],"correct_answer":"A","explanation":"D\u00e9tente involved negotiations and efforts to reduce superpower tensions."},{"id":"sec3_q19","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"After World War II, many Americans moved from cities to surrounding areas.  Which term describes this trend?","choices":["suburbanization","industrialization","urbanization","migration"],"correct_answer":"A","explanation":"Suburbanization refers to movement from cities into surrounding suburbs."},{"id":"sec3_q20","section":3,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that postwar economic growth led to changes in American lifestyles.  Which evidence supports this claim?","choices":["increased home ownership in suburban areas","reduced access to consumer goods","declining wages across industries","limited transportation development"],"correct_answer":"A","explanation":"Postwar prosperity encouraged suburban home ownership and consumer spending."},{"id":"sec3_q21","section":3,"difficulty":"moderate","stimulus_type":"image","stimulus_path":"assets/images/sec3_U.S. Involvement in Vietnam.png","stimulus_caption":"Timeline of U.S. involvement in the Vietnam War.","question":"The timeline above shows U.S. involvement in a conflict.  Which conclusion is best supported?","choices":["U.S. involvement increased over time before declining","economic growth remained constant throughout","immigration increased during the conflict","trade agreements ended early in the war"],"correct_answer":"A","explanation":"The timeline shows escalation followed by later reduction and withdrawal."},{"id":"sec3_q22","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A government program expanded highways and infrastructure after World War II.  What was a major result of this program?","choices":["increased suburban growth","reduced industrial production","decreased population movement","limited transportation options"],"correct_answer":"A","explanation":"Highways made suburban development and commuting easier."},{"id":"sec3_q23","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"After World War II, world leaders wanted an international body that could encourage diplomacy and reduce the chance of another global conflict.  Which organization was created to serve that role?","choices":["the United Nations","NATO","the Warsaw Pact","the League of Women Voters"],"correct_answer":"A","explanation":"The United Nations was created to promote diplomacy and international cooperation after World War II."},{"id":"sec3_q24","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A nation attempted to stop the spread of a rival political system in other countries.  Which idea best describes this action?","choices":["containment","isolationism","imperialism","neutrality"],"correct_answer":"A","explanation":"Containment aimed to stop the spread of communism."},{"id":"sec3_q25","section":3,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that Cold War competition influenced both military and technological development.  Which evidence supports this claim?","choices":["development of nuclear weapons and space programs","decline in industrial production","reduction in global alliances","limited government spending"],"correct_answer":"A","explanation":"Cold War rivalry fueled both the arms race and the Space Race."},{"id":"sec3_q26","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which Supreme Court case ruled that segregation in public schools was unconstitutional?","choices":["Brown v. Board of Education","Plessy v. Ferguson","Roe v. Wade","Marbury v. Madison"],"correct_answer":"A","explanation":"Brown v. Board of Education overturned school segregation."},{"id":"sec3_q27","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A protest movement used boycotts and marches to demand equal rights.  What was the primary goal of this movement?","choices":["to end racial discrimination","to expand industrial production","to reduce government spending","to increase foreign trade"],"correct_answer":"A","explanation":"Civil Rights activists sought to end discrimination and secure equal treatment."},{"id":"sec3_q28","section":3,"difficulty":"low","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"Which program provided financial support for veterans after World War II?","choices":["GI Bill","New Deal","Marshall Plan","Fair Deal"],"correct_answer":"A","explanation":"The GI Bill helped veterans with education, housing, and other benefits."},{"id":"sec3_q29","section":3,"difficulty":"high","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A historian argued that Cold War fears influenced American society beyond government policy.  Which example best supports this claim?","choices":["schools conducted drills in preparation for possible attacks","businesses expanded trade with foreign markets","immigration policies encouraged population growth","agricultural production increased nationwide"],"correct_answer":"A","explanation":"Duck-and-cover drills show Cold War fears affecting daily life and schools."},{"id":"sec3_q30","section":3,"difficulty":"moderate","stimulus_type":"none","stimulus_path":"","stimulus_caption":"","question":"A government invested in space exploration to compete with a rival nation.  Which event reflects this effort?","choices":["the Space Race","the Great Migration","the Progressive Era","the Industrial Revolution"],"correct_answer":"A","explanation":"The Space Race grew directly out of Cold War rivalry."}];
+
+var G = null;
+var _loginTeacher = null, _loginPeriod = null;
+var _lbAllData = [], _lbPeriod = 'all', _lbDeleteUnlocked = false;
+var _secIdx = 0;
+var _secQuestions = [];
+var _qIdx = 0;
+var _qAnswered = false;
+var _secScores = [0, 0, 0];
+var _shuffledChoices = [];
+var _correctChoiceIdx = -1;
+
+function getPortraitSVG(id, size) {
+  size = size || 60;
+  var avatars = {
+    scholar_f: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'"><rect width="40" height="40" fill="#0e1520"/><ellipse cx="20" cy="15" rx="8" ry="9" fill="#c8956a"/><rect x="12" y="24" width="16" height="16" fill="#1a2a4a"/><ellipse cx="16" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><ellipse cx="24" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><path d="M16 18 Q20 20 24 18" stroke="#a07040" stroke-width="0.8" fill="none"/><rect x="12" y="6" width="16" height="9" rx="4" fill="#2a1a0a"/><rect x="10" y="10" width="20" height="4" rx="2" fill="#2a1a0a"/></svg>',
+    activist_m: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'"><rect width="40" height="40" fill="#0e1520"/><ellipse cx="20" cy="15" rx="8" ry="9" fill="#3d1a0a"/><rect x="12" y="24" width="16" height="16" fill="#8b2020"/><ellipse cx="16" cy="13" rx="1.2" ry="1.4" fill="#0a0000"/><ellipse cx="24" cy="13" rx="1.2" ry="1.4" fill="#0a0000"/><path d="M16 18 Q20 21 24 18" stroke="#6b3020" stroke-width="0.8" fill="none"/><ellipse cx="20" cy="8" rx="7" ry="5" fill="#2a1005"/></svg>',
+    organizer_f: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'"><rect width="40" height="40" fill="#0e1520"/><ellipse cx="20" cy="15" rx="8" ry="9" fill="#c09060"/><rect x="12" y="24" width="16" height="16" fill="#2a3a5a"/><ellipse cx="16" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><ellipse cx="24" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><path d="M14 9 Q20 5 26 9 Q28 13 26 16 Q22 12 18 16 Q16 13 14 9" fill="#6a4020"/></svg>',
+    lawyer_m: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'"><rect width="40" height="40" fill="#0e1520"/><ellipse cx="20" cy="15" rx="8" ry="9" fill="#d4a870"/><rect x="12" y="24" width="16" height="16" fill="#1a1a2a"/><ellipse cx="16" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><ellipse cx="24" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><rect x="13" y="9" width="14" height="8" rx="1" fill="#2a1a0a"/></svg>',
+    veteran_m: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'"><rect width="40" height="40" fill="#0e1520"/><ellipse cx="20" cy="15" rx="8" ry="9" fill="#b08060"/><rect x="12" y="24" width="16" height="16" fill="#2a3a2a"/><ellipse cx="16" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><ellipse cx="24" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><rect x="13" y="7" width="14" height="7" rx="1" fill="#3a3a2a"/></svg>',
+    citizen_f: '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'"><rect width="40" height="40" fill="#0e1520"/><ellipse cx="20" cy="15" rx="8" ry="9" fill="#c8b090"/><rect x="12" y="24" width="16" height="16" fill="#1a3a5a"/><ellipse cx="16" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><ellipse cx="24" cy="13" rx="1.2" ry="1.4" fill="#1a0a00"/><path d="M14 8 Q20 5 26 8 L27 13 Q20 10 13 13 Z" fill="#8a6040"/></svg>'
+  };
+  return avatars[id] || avatars['scholar_f'];
+}
+
+var AVATAR_LIST = [
+  {id:'scholar_f',label:'Scholar'},{id:'activist_m',label:'Activist'},
+  {id:'organizer_f',label:'Organizer'},{id:'lawyer_m',label:'Lawyer'},
+  {id:'veteran_m',label:'Veteran'},{id:'citizen_f',label:'Citizen'}
+];
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function getRank(s) {
+  if (s >= 8000) return 'Master Historian';
+  if (s >= 5000) return 'Senior Scholar';
+  if (s >= 3000) return 'Researcher';
+  if (s >= 1500) return 'Apprentice';
+  return 'Curious Citizen';
+}
+
+function notify(msg, type) {
+  var el = document.createElement('div');
+  el.className = 'notif' + (type ? ' ' + type : '');
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(function() { el.remove(); }, 3500);
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function setActiveNav(n) {
+  document.querySelectorAll('.bn-btn').forEach(function(b, i) { b.classList.toggle('active', i === n); });
+}
+
+function saveGame() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(G)); } catch(e) {} }
+function loadGame() { try { var r = localStorage.getItem(SAVE_KEY); return r ? JSON.parse(r) : null; } catch(e) { return null; } }
+function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch(e) {} }
+
+function newGame(name, teacher, period, avatarId) {
+  return {
+    name: name, teacher: teacher, period: period, avatarId: avatarId || 'scholar_f',
+    score: 0, totalAnswers: 0, correctAnswers: 0,
+    checkpointCompleted: false, checkpointBestScore: null,
+    checkpointBestAccuracy: null, checkpointAttempts: 0,
+    _prevRunScores: null
+  };
+}
+
+function normalizeG() {
+  if (!G) return;
+  if (!G.score) G.score = 0;
+  if (!G.totalAnswers) G.totalAnswers = 0;
+  if (!G.correctAnswers) G.correctAnswers = 0;
+  if (!G.checkpointAttempts) G.checkpointAttempts = 0;
+}
+
+function getShellProfile() {
+  try {
+    var raw = localStorage.getItem(SHELL_KEY);
+    if (!raw) return null;
+    var p = JSON.parse(raw);
+    if (p && p.name && p.name !== 'Guest' && p.setupDone) return p;
+  } catch(e) {}
+  return null;
+}
+
+function notifyShellComplete() {
+  try {
+    var raw = localStorage.getItem(SHELL_KEY);
+    if (!raw) return;
+    var s = JSON.parse(raw);
+    if (!s.unitsCompleted) s.unitsCompleted = [];
+    if (s.unitsCompleted.indexOf(SHELL_UNIT_ID) === -1) s.unitsCompleted.push(SHELL_UNIT_ID);
+    localStorage.setItem(SHELL_KEY, JSON.stringify(s));
+  } catch(e) {}
+}
+
+function returnToShell() { window.location.href = 'https://olsonjoshua-code.github.io/american-chronicles/'; }
+
+function showLoginGate() {
+  var sp = getShellProfile();
+  var saved = loadGame();
+  if (saved && G && G.name) { showWelcomeGate(G, sp || null); return; }
+  if (sp) { showWelcomeGate(null, sp); return; }
+  document.getElementById('code-gate-overlay').classList.add('show');
+  goToStep(1);
+}
+
+function showWelcomeGate(savedGame, shellProfile) {
+  var wg = document.getElementById('welcome-gate');
+  var name = savedGame ? savedGame.name : (shellProfile ? shellProfile.name : '');
+  var period = savedGame ? savedGame.period : (shellProfile ? shellProfile.period : '');
+  var avatarId = savedGame ? savedGame.avatarId : (shellProfile ? shellProfile.avatar || 'scholar_f' : 'scholar_f');
+  document.getElementById('wg-avatar').innerHTML = getPortraitSVG(avatarId, 60);
+  document.getElementById('wg-name').textContent = name || 'Unknown';
+  document.getElementById('wg-detail').textContent = (period && period !== '0') ? 'Mr. Olson - Period ' + period : 'Guest / Other';
+  var progress = 'No progress saved yet';
+  if (savedGame && savedGame.checkpointCompleted) {
+    progress = 'Checkpoint completed - Score: ' + (savedGame.checkpointBestScore || 0) + '/30';
+  } else if (savedGame) {
+    progress = 'In progress';
+  }
+  document.getElementById('wg-progress').textContent = progress;
+  wg._savedGame = savedGame;
+  wg._shellProfile = shellProfile;
+  wg.classList.add('show');
+}
+
+function welcomeContinue() {
+  var wg = document.getElementById('welcome-gate');
+  var saved = wg._savedGame;
+  var sp = wg._shellProfile;
+  wg.classList.remove('show');
+  if (saved) { G = saved; if (sp && sp.avatar) G.avatarId = sp.avatar || G.avatarId; saveGame(); }
+  else if (sp) { G = newGame(sp.name, 'olson', sp.period || '0', sp.avatar || 'scholar_f'); G.shellLinked = true; saveGame(); }
+  normalizeG();
+  afterLogin();
+}
+
+function welcomeNewPlayer() {
+  document.getElementById('welcome-gate').classList.remove('show');
+  clearSave(); G = null;
+  document.getElementById('code-gate-overlay').classList.add('show');
+  goToStep(1);
+}
+
+function goToStep(n) {
+  [1, 2, 3].forEach(function(i) {
+    document.getElementById('login-step-' + i).style.display = (i === n) ? 'block' : 'none';
+  });
+}
+
+function selectTeacher(t) {
+  _loginTeacher = t;
+  if (t === 'guest') {
+    _loginPeriod = '0';
+    goToStep(3);
+    document.getElementById('login-step3-label').textContent = "Enter your name. You'll appear on the Overall leaderboard only.";
+    return;
+  }
+  var teacher = TEACHERS[t];
+  var el = document.getElementById('period-buttons');
+  if (el && teacher) {
+    el.innerHTML = teacher.periods.map(function(p) {
+      return '<button class="btn sm" onclick="selectPeriod(\'' + p + '\')">' + p + '</button>';
+    }).join('');
+  }
+  goToStep(2);
+}
+
+function selectPeriod(p) {
+  _loginPeriod = p;
+  goToStep(3);
+  document.getElementById('login-step3-label').textContent = 'Mr. Olson - Period ' + p + '. Enter your name:';
+}
+
+function submitClassCode() {
+  var inp = document.getElementById('class-code-input');
+  var err = document.getElementById('code-error');
+  var name = (inp && inp.value.trim()) || '';
+  if (!name) { if (err) err.textContent = 'Please enter your name.'; return; }
+  G = newGame(name, _loginTeacher || 'guest', _loginPeriod || '0', 'scholar_f');
+  saveGame();
+  document.getElementById('code-gate-overlay').classList.remove('show');
+  if (inp) inp.value = '';
+  afterLogin();
+}
+
+function afterLogin() {
+  updateHUD();
+  document.getElementById('game-header').style.display = 'block';
+  document.getElementById('bottom-nav').classList.add('show');
+  var sp = getShellProfile();
+  if (sp || (G && G.shellLinked)) {
+    var rb = document.getElementById('shell-return-btn');
+    if (rb) rb.style.display = 'block';
+  }
+  renderHub();
+  showScreen('hub-screen');
+  setActiveNav(0);
+}
+
+function showTeacherDashboard() {
+  var pw = prompt('Enter teacher code:');
+  if (!pw) return;
+  var valid = false;
+  for (var k in TEACHERS) {
+    if (pw.toUpperCase() === TEACHERS[k].teacherCode.toUpperCase()) { valid = true; break; }
+  }
+  if (!valid) { alert('Incorrect code.'); return; }
+  document.getElementById('teacher-overlay').classList.add('show');
+  loadTeacherData();
+}
+
+function updateHUD() {
+  if (!G) return;
+  document.getElementById('hud-avatar-svg').innerHTML = getPortraitSVG(G.avatarId || 'scholar_f', 44);
+  document.getElementById('hud-name').textContent = G.name || '--';
+  document.getElementById('hud-rank').textContent = getRank(G.score || 0);
+  document.getElementById('hud-score').textContent = (G.score || 0).toLocaleString();
+}
+
+function renderHub() {
+  if (!G) return;
+  var bannerEl = document.getElementById('hub-banner-container');
+  if (bannerEl) {
+    bannerEl.innerHTML = '<div class="hub-banner"><div class="hub-avatar" id="hub-av"></div>' +
+      '<div style="flex:1"><div class="hub-player-name">' + G.name + '</div>' +
+      '<div class="hub-player-rank">' + getRank(G.score || 0) + (G.period && G.period !== '0' ? ' - Period ' + G.period : '') + '</div></div>' +
+      '<div style="text-align:right"><div style="font-family:var(--bebas);font-size:22px;color:var(--liberty)">' + (G.score || 0).toLocaleString() + '</div>' +
+      '<div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">POINTS</div></div></div>';
+    var avEl = document.getElementById('hub-av');
+    if (avEl) avEl.innerHTML = getPortraitSVG(G.avatarId || 'scholar_f', 60);
+  }
+  var listEl = document.getElementById('hub-sections-list');
+  if (listEl) {
+    var prev = G._prevRunScores || [null, null, null];
+    listEl.innerHTML = SECTIONS.map(function(s, i) {
+      var sc = prev[i];
+      var scoreStr = (sc !== null && sc !== undefined) ? sc + '/10' : '--';
+      var pct = (sc !== null && sc !== undefined) ? Math.round((sc / 10) * 100) : null;
+      var pctColor = pct === null ? 'var(--text3)' : pct >= 80 ? 'var(--green2)' : pct >= 60 ? 'var(--gold)' : 'var(--red2)';
+      return '<div style="background:var(--bg2);border:1px solid var(--border2);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px">' +
+        '<div style="font-size:28px;flex-shrink:0">' + s.icon + '</div>' +
+        '<div style="flex:1"><div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:2px">SECTION ' + s.num + ' - ' + s.era + '</div>' +
+        '<div style="font-family:var(--playfair);font-size:14px;color:var(--cream);margin-bottom:2px">' + s.title + '</div>' +
+        '<div style="font-family:var(--dm);font-size:9px;color:var(--text3)">10 questions - randomized</div></div>' +
+        '<div style="font-family:var(--bebas);font-size:20px;color:' + pctColor + '">' + scoreStr + '</div></div>';
+    }).join('');
+  }
+  var lbl = document.getElementById('hub-start-label');
+  if (lbl) lbl.textContent = G.checkpointCompleted ? 'Retake Checkpoint ->' : 'Begin Checkpoint ->';
+  updateHUD();
+}
+
+function launchCheckpoint() {
+  _secIdx = 0;
+  _secScores = [0, 0, 0];
+  showSectionIntro(0);
+}
+
+function showSectionIntro(idx) {
+  _secIdx = idx;
+  var s = SECTIONS[idx];
+  var el = document.getElementById('section-intro-content');
+  if (el) {
+    el.innerHTML =
+      '<div style="text-align:center;margin-bottom:20px">' +
+        '<div style="font-size:52px;margin-bottom:10px">' + s.icon + '</div>' +
+        '<div class="era-badge" style="color:var(--gold);border-color:var(--gold2)">' + s.era.toUpperCase() + '</div>' +
+        '<div style="font-family:var(--bebas);font-size:11px;color:var(--text3);letter-spacing:4px;margin:6px 0">SECTION ' + s.num + ' OF 3</div>' +
+        '<div style="font-family:var(--bebas);font-size:28px;color:var(--parchment);letter-spacing:2px;margin-bottom:8px">' + s.title + '</div>' +
+      '</div>' +
+      '<div style="background:linear-gradient(135deg,rgba(74,159,212,0.06),rgba(74,159,212,0.02));border:1px solid var(--border2);border-left:3px solid var(--liberty);padding:16px 18px;margin-bottom:14px">' +
+        '<div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:6px">WHAT YOU WILL BE ASSESSED ON</div>' +
+        '<div style="font-family:var(--crimson);font-size:15px;color:var(--text);line-height:1.75">' + s.desc + '</div>' +
+      '</div>' +
+      '<div style="background:var(--bg2);border:1px solid var(--border2);padding:12px 14px;margin-bottom:14px">' +
+        '<div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:4px">STANDARDS</div>' +
+        '<div style="font-family:var(--dm);font-size:10px;color:var(--text2)">' + s.standards + '</div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">' +
+        '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:20px;color:var(--gold)">10</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">QUESTIONS</div></div>' +
+        '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:20px;color:var(--gold)">30</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">IN BANK</div></div>' +
+      '</div>';
+  }
+  showScreen('section-intro-screen');
+  window.scrollTo(0, 0);
+}
+
+function startSection() {
+  var pool = QUESTION_BANK.filter(function(q) { return q.section === (_secIdx + 1); });
+  _secQuestions = shuffle(pool).slice(0, 10);
+  _qIdx = 0;
+  _qAnswered = false;
+  renderQuestion();
+  showScreen('question-screen');
+  window.scrollTo(0, 0);
+}
+
+function renderQuestion() {
+  if (_qIdx >= _secQuestions.length) { finishSection(); return; }
+  var q = _secQuestions[_qIdx];
+  _qAnswered = false;
+
+  var pct = Math.round((_qIdx / _secQuestions.length) * 100);
+  document.getElementById('q-progress-fill').style.width = pct + '%';
+
+  var secName = 'Section ' + (_secIdx + 1) + ' - ' + SECTIONS[_secIdx].era;
+  var diffClass = 'diff-' + q.difficulty;
+  document.getElementById('q-meta').innerHTML =
+    '<span style="color:var(--text3)">' + secName + '</span> - Q' + (_qIdx + 1) + ' of ' + _secQuestions.length +
+    '<span class="diff-pill ' + diffClass + '">' + q.difficulty.toUpperCase() + '</span>';
+
+  var stimEl = document.getElementById('stimulus-container');
+  stimEl.innerHTML = '';
+  if (q.stimulus_type === 'image' && q.stimulus_path) {
+    stimEl.innerHTML =
+      '<div class="stimulus-block">' +
+        '<img class="stimulus-img" src="' + q.stimulus_path + '" alt="stimulus" onclick="openImgModal(\'' + q.stimulus_path + '\')">' +
+        (q.stimulus_caption ? '<div class="stimulus-caption">' + q.stimulus_caption + '</div>' : '') +
+      '</div>';
+  }
+
+  document.getElementById('q-text').textContent = q.question;
+
+  var letters = ['A', 'B', 'C', 'D'];
+  var correctText = q.choices[letters.indexOf(q.correct_answer)];
+  _shuffledChoices = shuffle(q.choices.slice());
+  _correctChoiceIdx = _shuffledChoices.indexOf(correctText);
+
+  var choicesEl = document.getElementById('q-choices');
+  choicesEl.innerHTML = _shuffledChoices.map(function(c, i) {
+    return '<button class="choice-btn" id="qc-' + i + '" onclick="selectChoice(' + i + ')" ' +
+      'style="font-family:var(--crimson);font-size:15px;color:var(--text);line-height:1.5">' +
+      '<span style="font-family:var(--dm);font-size:9px;color:var(--text3);margin-right:8px">' + String.fromCharCode(65 + i) + '.</span>' +
+      c + '</button>';
+  }).join('');
+
+  document.getElementById('q-feedback').innerHTML = '';
+}
+
+function selectChoice(idx) {
+  if (_qAnswered) return;
+  _qAnswered = true;
+  var isCorrect = (idx === _correctChoiceIdx);
+  var q = _secQuestions[_qIdx];
+
+  for (var i = 0; i < _shuffledChoices.length; i++) {
+    var btn = document.getElementById('qc-' + i);
+    if (!btn) continue;
+    if (i === idx) {
+      btn.className = 'choice-btn ' + (isCorrect ? 'correct' : 'incorrect');
+    } else if (i === _correctChoiceIdx) {
+      btn.className = 'choice-btn correct';
+    }
+    btn.onclick = null;
+  }
+
+  G.totalAnswers = (G.totalAnswers || 0) + 1;
+  if (isCorrect) {
+    _secScores[_secIdx]++;
+    G.correctAnswers = (G.correctAnswers || 0) + 1;
+    G.score = (G.score || 0) + 100;
+    notify('+100 pts', 'green');
+  } else {
+    notify('Incorrect - see explanation', 'red');
+  }
+
+  var verdictClass = isCorrect ? 'correct' : 'incorrect';
+  var verdictText = isCorrect ? 'CORRECT - Good Thinking' : 'INCORRECT - Here is Why';
+  var fb = document.getElementById('q-feedback');
+  fb.innerHTML =
+    '<div class="feedback-panel show ' + verdictClass + '" style="margin-top:10px">' +
+      '<div class="feedback-verdict ' + verdictClass + '">' + verdictText + '</div>' +
+      '<div class="feedback-text">' + q.explanation + '</div>' +
+      '<div style="font-family:var(--dm);font-size:9px;color:var(--text3);border-top:1px solid var(--border);padding-top:8px;margin-top:8px">' +
+        '<span style="display:inline-block;font-family:var(--dm);font-size:8px;color:var(--text3);border:1px solid var(--border2);padding:2px 6px;margin:2px;border-radius:2px">' +
+        SECTIONS[_secIdx].standards.split(',')[0].trim() + '</span> Standards alignment</div>' +
+    '</div>' +
+    '<button onclick="nextQuestion()" class="btn full gold" style="margin-top:10px"><span>' +
+      (_qIdx + 1 < _secQuestions.length ? 'Next Question ->' : 'Finish Section ->') +
+    '</span></button>';
+  fb.scrollIntoView({behavior:'smooth', block:'nearest'});
+  saveGame();
+  updateHUD();
+}
+
+function nextQuestion() { _qIdx++; renderQuestion(); }
+
+function finishSection() {
+  var score = _secScores[_secIdx];
+  var acc = Math.round((score / 10) * 100);
+  var secData = SECTIONS[_secIdx];
+  var tierColor = acc >= 80 ? 'var(--green2)' : acc >= 60 ? 'var(--gold)' : 'var(--red2)';
+  var tierMsg = acc >= 80 ? 'Strong performance on this section.' :
+                acc >= 60 ? 'Adequate understanding - review missed questions.' :
+                'Below target - review this section carefully.';
+  var el = document.getElementById('section-summary-content');
+  if (el) {
+    el.innerHTML =
+      '<div style="text-align:center;margin-bottom:16px">' +
+        '<div style="font-size:42px;margin-bottom:8px">' + secData.icon + '</div>' +
+        '<div class="era-badge" style="color:var(--gold);border-color:var(--gold2)">SECTION ' + secData.num + ' COMPLETE</div>' +
+        '<div style="font-family:var(--bebas);font-size:22px;color:var(--parchment);letter-spacing:2px;margin-top:8px">' + secData.title + '</div>' +
+      '</div>' +
+      '<div class="sec-complete-block">' +
+        '<div class="sec-score-grid">' +
+          '<div class="sec-score-cell"><div class="sec-score-val" style="color:' + tierColor + '">' + score + '/10</div><div class="sec-score-lbl">CORRECT</div></div>' +
+          '<div class="sec-score-cell"><div class="sec-score-val">' + acc + '%</div><div class="sec-score-lbl">ACCURACY</div></div>' +
+          '<div class="sec-score-cell"><div class="sec-score-val" style="color:var(--gold)">' + (score * 100) + '</div><div class="sec-score-lbl">POINTS</div></div>' +
+        '</div>' +
+        '<div style="font-family:var(--crimson);font-size:15px;color:var(--text2);font-style:italic;text-align:center;padding:10px 0">' + tierMsg + '</div>' +
+      '</div>' +
+      '<div style="background:var(--bg2);border:1px solid var(--border2);padding:14px 16px;margin-bottom:14px">' +
+        '<div style="font-family:var(--bebas);font-size:10px;color:var(--text3);letter-spacing:2px;margin-bottom:8px">PROGRESS SO FAR</div>' +
+        SECTIONS.map(function(s, i) {
+          var done = i <= _secIdx;
+          var sc = done ? _secScores[i] : null;
+          return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;opacity:' + (done ? 1 : 0.35) + '">' +
+            '<span style="font-size:16px">' + s.icon + '</span>' +
+            '<div style="flex:1;font-family:var(--dm);font-size:10px;color:var(--text2)">' + s.title + '</div>' +
+            (done ? '<div style="font-family:var(--bebas);font-size:14px;color:var(--liberty)">' + sc + '/10</div>' :
+                    '<div style="font-family:var(--dm);font-size:9px;color:var(--text3)">--</div>') +
+          '</div>';
+        }).join('') +
+      '</div>';
+  }
+  var nextEl = document.getElementById('section-summary-next-btn');
+  if (nextEl) {
+    if (_secIdx < 2) {
+      nextEl.innerHTML = '<button class="btn full gold" style="font-size:15px;padding:15px" onclick="showSectionIntro(' + (_secIdx + 1) + ')"><span>Continue to Section ' + (_secIdx + 2) + ' -></span></button>';
+    } else {
+      nextEl.innerHTML = '<button class="btn full gold" style="font-size:15px;padding:15px" onclick="showFinalResults()"><span>View Final Results -></span></button>';
+    }
+  }
+  showScreen('section-summary-screen');
+  window.scrollTo(0, 0);
+}
+
+function showFinalResults() {
+  var total = _secScores[0] + _secScores[1] + _secScores[2];
+  var acc = Math.round((total / 30) * 100);
+  var tier, tierColor, tierBg, tierDesc;
+  if (total >= 24) {
+    tier = 'Above Expectations'; tierColor = 'var(--green2)'; tierBg = 'rgba(56,160,80,0.06)';
+    tierDesc = 'You demonstrated strong command of U.S. History content across all three sections. You are well-prepared for the EOC assessment.';
+  } else if (total >= 18) {
+    tier = 'Near Expectations'; tierColor = 'var(--gold)'; tierBg = 'rgba(212,160,23,0.06)';
+    tierDesc = 'You showed solid understanding with some gaps. Review your missed questions and targeted sections before the exam.';
+  } else {
+    tier = 'Below Expectations'; tierColor = 'var(--red2)'; tierBg = 'rgba(224,64,64,0.06)';
+    tierDesc = 'You should revisit key content before the EOC. Work through missed topics systematically using your notes and study resources.';
+  }
+  G.checkpointAttempts = (G.checkpointAttempts || 0) + 1;
+  if (!G.checkpointBestScore || total > G.checkpointBestScore) G.checkpointBestScore = total;
+  if (!G.checkpointBestAccuracy || acc > G.checkpointBestAccuracy) G.checkpointBestAccuracy = acc;
+  G.checkpointCompleted = true;
+  G._prevRunScores = [_secScores[0], _secScores[1], _secScores[2]];
+  saveGame();
+  notifyShellComplete();
+  pushACResult();
+
+  var el = document.getElementById('final-results-content');
+  if (el) {
+    el.innerHTML =
+      '<div style="text-align:center;margin-bottom:20px">' +
+        '<div class="era-badge" style="color:var(--gold);border-color:var(--gold2)">ASSESSMENT COMPLETE</div>' +
+        '<div style="font-family:var(--bebas);font-size:30px;color:var(--parchment);letter-spacing:3px;margin:8px 0">MIDTERM EOC<br>CHECKPOINT</div>' +
+        '<div class="deco-divider"><span class="deco-divider-icon">&#128203;</span></div>' +
+      '</div>' +
+      '<div style="background:var(--bg2);border:1px solid var(--border2);padding:16px;margin-bottom:14px;text-align:center">' +
+        '<div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:6px">TOTAL SCORE</div>' +
+        '<div style="font-family:var(--bebas);font-size:52px;color:var(--liberty);letter-spacing:2px;line-height:1">' + total + ' <span style="font-size:28px;color:var(--text3)">/ 30</span></div>' +
+        '<div style="font-family:var(--dm);font-size:13px;color:var(--text2);margin-top:4px">' + acc + '% Overall Accuracy</div>' +
+      '</div>' +
+      '<div class="tier-block" style="background:' + tierBg + ';border-color:' + tierColor + '">' +
+        '<div class="tier-label" style="color:' + tierColor + '">' + tier + '</div>' +
+        '<div class="tier-desc" style="color:var(--text2)">' + tierDesc + '</div>' +
+      '</div>' +
+      '<div style="margin-bottom:14px">' +
+        '<div style="font-family:var(--bebas);font-size:13px;color:var(--text3);letter-spacing:2px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border2)">SECTION BREAKDOWN</div>' +
+        SECTIONS.map(function(s, i) {
+          var sc = _secScores[i];
+          var p = Math.round((sc / 10) * 100);
+          var c = p >= 80 ? 'var(--green2)' : p >= 60 ? 'var(--gold)' : 'var(--red2)';
+          return '<div class="final-section-row">' +
+            '<div><div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:1px;margin-bottom:2px">SECTION ' + s.num + ' - ' + s.era + '</div>' +
+            '<div style="font-family:var(--playfair);font-size:14px;color:var(--cream)">' + s.title + '</div>' +
+            '<div style="height:3px;background:rgba(255,255,255,0.04);margin-top:6px;width:140px;border-radius:2px">' +
+              '<div style="height:100%;width:' + p + '%;background:' + c + ';border-radius:2px"></div></div></div>' +
+            '<div style="text-align:right"><div style="font-family:var(--bebas);font-size:24px;color:' + c + '">' + sc + '<span style="font-size:14px;color:var(--text3)">/10</span></div>' +
+            '<div style="font-family:var(--dm);font-size:9px;color:var(--text3)">' + p + '%</div></div></div>';
+        }).join('') +
+      '</div>' +
+      '<div style="background:var(--bg2);border:1px solid var(--border2);padding:14px 16px;margin-bottom:16px">' +
+        '<div style="font-family:var(--bebas);font-size:10px;color:var(--text3);letter-spacing:2px;margin-bottom:6px">YOUR BEST ATTEMPT</div>' +
+        '<div style="display:flex;gap:12px">' +
+          '<div style="text-align:center;flex:1"><div style="font-family:var(--bebas);font-size:20px;color:var(--liberty)">' + (G.checkpointBestScore || 0) + '/30</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">BEST SCORE</div></div>' +
+          '<div style="text-align:center;flex:1"><div style="font-family:var(--bebas);font-size:20px;color:var(--liberty)">' + (G.checkpointBestAccuracy || 0) + '%</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">BEST ACCURACY</div></div>' +
+          '<div style="text-align:center;flex:1"><div style="font-family:var(--bebas);font-size:20px;color:var(--liberty)">' + (G.checkpointAttempts || 1) + '</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">ATTEMPTS</div></div>' +
+        '</div></div>' +
+      '<button class="btn full gold" style="font-size:15px;padding:15px;margin-bottom:8px" onclick="launchCheckpoint()"><span>Retake Checkpoint -></span></button>' +
+      '<button class="btn full" onclick="returnToShell()" style="border-color:var(--border2);color:var(--text2);font-size:11px;margin-bottom:8px"><span>&larr; Return to Hub</span></button>' +
+      '<button class="btn full" onclick="printCertificate()" style="border-color:var(--parchment2);color:var(--parchment2);font-size:11px"><span>Print Certificate</span></button>' +
+      '<div style="font-family:var(--dm);font-size:9px;color:var(--text3);margin-top:14px;font-style:italic;text-align:center">This is an estimated EOC practice level only. Not an official Florida EOC score.</div>';
+  }
+  renderHub();
+  showScreen('final-screen');
+  window.scrollTo(0, 0);
+  updateHUD();
+}
+
+function openImgModal(src) {
+  document.getElementById('img-modal-src').src = src;
+  document.getElementById('img-modal').classList.add('show');
+}
+function closeImgModal() { document.getElementById('img-modal').classList.remove('show'); }
+
+function printCertificate() {
+  if (!G) return;
+  var total = G._prevRunScores ? G._prevRunScores[0] + G._prevRunScores[1] + G._prevRunScores[2] : (G.checkpointBestScore || 0);
+  var acc = G.checkpointBestAccuracy || 0;
+  var tier = total >= 24 ? 'Above Expectations' : total >= 18 ? 'Near Expectations' : 'Below Expectations';
+  var tierColor = total >= 24 ? '#38a050' : total >= 18 ? '#d4a017' : '#e04040';
+  var pd = G.period && G.period !== '0' ? ' - Period ' + G.period : '';
+  var w = window.open('', '_blank');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Certificate - ' + G.name + '</title>' +
+    '<style>body{font-family:Georgia,serif;background:#f0eadc;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;margin:0}' +
+    '.cert{width:680px;background:#f5ead8;border:3px solid #2d5a8a;padding:40px 50px;text-align:center;box-shadow:0 0 0 8px #f5ead8,0 0 0 10px #2d5a8a,0 0 0 14px #f5ead8,0 0 0 16px #4a7ab0}' +
+    'h1{font-size:24px;color:#0e1520;margin:8px 0}' +
+    '.divider{height:1px;background:linear-gradient(90deg,transparent,#2d5a8a,transparent);margin:14px auto;width:80%}' +
+    '.badge{display:inline-block;width:70px;height:70px;border-radius:50%;border:2px solid #2d5a8a;font-size:32px;line-height:70px;margin:10px auto}' +
+    '.stats{display:flex;justify-content:center;gap:24px;margin:16px 0;padding:12px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.1)}' +
+    '.stat-val{font-size:20px;font-weight:700;color:#2d5a8a}.stat-lbl{font-size:8px;letter-spacing:2px;color:#2d5a8a;margin-top:2px}' +
+    '.level{font-size:32px;font-weight:700;color:' + tierColor + '}' +
+    '.sigs{display:flex;justify-content:space-around;margin-top:20px;padding-top:14px;border-top:1px solid rgba(0,0,0,.2)}' +
+    '.sig-line{width:140px;height:1px;background:#2d5a8a;margin:0 auto 4px}.sig-name{font-size:11px;color:#0e1520;font-weight:700}.sig-title{font-size:8px;color:#2d5a8a;letter-spacing:1px}' +
+    '.nbtn{text-align:center;margin-top:18px}button{padding:10px 24px;background:#2d5a8a;border:none;color:#f5ead8;font-size:13px;cursor:pointer;margin:0 6px}' +
+    '@media print{.nbtn{display:none!important}}</style></head><body>' +
+    '<div class="cert">' +
+    '<div style="font-size:10px;letter-spacing:4px;color:#2d5a8a;margin-bottom:8px">MIDTERM EOC CHECKPOINT - AMERICAN CHRONICLES</div>' +
+    '<div class="badge">&#128203;</div>' +
+    '<h1>Certificate of Completion</h1>' +
+    '<div class="divider"></div>' +
+    '<div style="font-size:13px;color:#3a3020;margin:8px 0">This certifies that</div>' +
+    '<div style="font-size:28px;font-style:italic;color:#2d5a8a;margin:10px 0;border-bottom:2px solid #2d5a8a;padding-bottom:8px;display:inline-block">' + G.name + '</div>' +
+    '<div style="font-size:13px;color:#3a3020;margin:8px 0;line-height:1.7">has completed<br><strong style="font-size:18px;color:#2d5a8a">Midterm EOC Checkpoint</strong><br><span style="font-size:11px;color:#2d5a8a">Cumulative Readiness Assessment - 30 Questions - Three Sections</span></div>' +
+    '<div style="margin:16px 0;padding:14px;background:rgba(45,90,138,.06);border:2px solid #2d5a8a;display:inline-block;min-width:180px"><div style="font-size:9px;letter-spacing:3px;color:#2d5a8a;margin-bottom:4px">PERFORMANCE TIER</div><div class="level">' + tier + '</div><div style="font-size:12px;color:#3a3020;margin-top:6px">Score: ' + (G.checkpointBestScore || 0) + '/30 - Accuracy: ' + acc + '%</div></div>' +
+    '<div class="stats">' +
+    (G._prevRunScores ? G._prevRunScores.map(function(s, i) { return '<div style="text-align:center"><div class="stat-val">' + s + '/10</div><div class="stat-lbl">SECTION ' + (i + 1) + '</div></div>'; }).join('') : '') +
+    '</div>' +
+    '<div class="divider"></div>' +
+    '<div class="sigs">' +
+    '<div><div class="sig-line"></div><div class="sig-name">' + G.name + '</div><div class="sig-title">STUDENT' + pd + '</div></div>' +
+    '<div><div class="sig-line"></div><div class="sig-name">Joshua Olson</div><div class="sig-title">U.S. HISTORY TEACHER</div></div>' +
+    '<div><div class="sig-line"></div><div class="sig-name">' + new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) + '</div><div class="sig-title">DATE COMPLETED</div></div>' +
+    '</div></div>' +
+    '<div class="nbtn"><button onclick="window.print()">Print / Save as PDF</button><button onclick="window.close()" style="background:#3a3020">Close</button></div>' +
+    '</body></html>');
+  w.document.close();
+}
+
+function openLeaderboard() {
+  document.getElementById('leaderboard-overlay').classList.add('show');
+  loadLeaderboard();
+}
+
+function setLBPeriod(p) {
+  _lbPeriod = p;
+  document.getElementById('lb-tab-all').classList.toggle('active', p === 'all');
+  document.getElementById('lb-tab-class').classList.toggle('active', p === 'class');
+  renderLeaderboard(_lbAllData);
+}
+
+async function loadLeaderboard() {
+  document.getElementById('lb-content').innerHTML = '<div style="font-family:var(--dm);font-size:11px;color:var(--text3)">Loading...</div>';
+  try {
+    var r = await fetch(AC_SUPA_URL + '/rest/v1/ac_results?unit_id=eq.' + SHELL_UNIT_ID + '&order=best_score.desc&limit=200', {headers: AC_HEADERS});
+    _lbAllData = await r.json() || [];
+    renderLeaderboard(_lbAllData);
+  } catch(e) {
+    document.getElementById('lb-content').innerHTML = '<div style="font-family:var(--dm);font-size:11px;color:var(--text3)">Could not load leaderboard.</div>';
+  }
+}
+
+function renderLeaderboard(data) {
+  var filtered = data;
+  if (_lbPeriod === 'class' && G && G.period && G.period !== '0') {
+    filtered = data.filter(function(s) { return s.period === G.period; });
+  }
+  if (!filtered.length) {
+    document.getElementById('lb-content').innerHTML = '<div style="font-family:var(--dm);font-size:11px;color:var(--text3);padding:20px 0;text-align:center">No scores yet.</div>';
+    return;
+  }
+  var rows = filtered.slice(0, 50).map(function(s, i) {
+    var isMe = G && s.name === G.name && s.period === G.period;
+    var delBtn = _lbDeleteUnlocked ? '<td><button class="lb-del-btn" data-name="' + s.name + '" data-period="' + s.period + '" style="font-family:var(--bebas);font-size:10px;background:transparent;border:1px solid var(--red2);color:var(--red2);padding:3px 8px;cursor:pointer">X</button></td>' : '';
+    return '<tr class="' + (isMe ? 'lb-you' : '') + '">' +
+      '<td style="font-family:var(--dm);font-size:10px;color:var(--text3)">' + (i + 1) + '</td>' +
+      '<td><div class="lb-name">' + (s.name || '--') + (isMe ? ' &lt;--' : '') + '</div></td>' +
+      '<td style="font-family:var(--dm);font-size:10px;color:var(--text2)">' + (s.period && s.period !== '0' ? 'Pd ' + s.period : '--') + '</td>' +
+      '<td class="lb-score">' + (s.best_score || 0) + '/30</td>' +
+      '<td style="font-family:var(--dm);font-size:10px;color:var(--gold)">' + (s.best_accuracy != null ? s.best_accuracy + '%' : '--') + '</td>' +
+      delBtn + '</tr>';
+  }).join('');
+  document.getElementById('lb-content').innerHTML =
+    '<table class="lb-table"><thead><tr><th>#</th><th>STUDENT</th><th>PD</th><th>SCORE</th><th>ACCURACY</th>' + (_lbDeleteUnlocked ? '<th></th>' : '') + '</tr></thead><tbody>' + rows + '</tbody></table>';
+  if (_lbDeleteUnlocked) {
+    document.querySelectorAll('.lb-del-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { lbDeleteEntry(btn.dataset.name, btn.dataset.period); });
+    });
+  }
+}
+
+async function unlockLBDelete() {
+  var pw = prompt('Enter teacher code to unlock delete controls:');
+  if (!pw) return;
+  var valid = false;
+  for (var k in TEACHERS) {
+    if (pw.toUpperCase() === TEACHERS[k].teacherCode.toUpperCase()) { valid = true; break; }
+  }
+  if (!valid) { notify('Incorrect code', 'red'); return; }
+  _lbDeleteUnlocked = true;
+  var btn = document.getElementById('lb-teacher-unlock');
+  if (btn) { btn.textContent = 'Unlocked'; btn.style.borderColor = 'var(--liberty)'; btn.style.color = 'var(--liberty)'; }
+  notify('Delete controls unlocked', 'green');
+  renderLeaderboard(_lbAllData);
+}
+
+async function lbDeleteEntry(name, period) {
+  if (!confirm('Remove "' + name + '" from the leaderboard?')) return;
+  try {
+    await fetch(AC_SUPA_URL + '/rest/v1/ac_results?name=eq.' + encodeURIComponent(name) + '&period=eq.' + encodeURIComponent(period) + '&unit_id=eq.' + SHELL_UNIT_ID, {method:'DELETE', headers:AC_HEADERS});
+    notify('Removed', 'green');
+    await loadLeaderboard();
+  } catch(e) { notify('Error removing entry', 'red'); }
+}
+
+function openProfile() {
+  document.getElementById('profile-overlay').classList.add('show');
+  var acc = G && G.totalAnswers > 0 ? Math.round((G.correctAnswers / G.totalAnswers) * 100) : 0;
+  var el = document.getElementById('profile-content');
+  if (el) {
+    el.innerHTML =
+      '<div style="text-align:center;margin-bottom:16px">' +
+        '<div style="width:80px;height:80px;margin:0 auto 12px">' + getPortraitSVG(G ? G.avatarId : 'scholar_f', 80) + '</div>' +
+        '<div style="font-family:var(--playfair);font-size:18px;color:var(--cream);font-style:italic">' + (G ? G.name : '--') + '</div>' +
+        '<div style="font-family:var(--dm);font-size:10px;color:var(--liberty3);margin-top:4px">' + getRank(G ? G.score || 0 : 0) + '</div>' +
+      '</div>' +
+      '<div class="profile-stat-grid">' +
+        '<div class="profile-stat"><div class="profile-stat-val">' + (G ? (G.score || 0).toLocaleString() : '0') + '</div><div class="profile-stat-lbl">TOTAL SCORE</div></div>' +
+        '<div class="profile-stat"><div class="profile-stat-val">' + (G ? G.checkpointAttempts || 0 : 0) + '</div><div class="profile-stat-lbl">ATTEMPTS</div></div>' +
+        '<div class="profile-stat"><div class="profile-stat-val">' + acc + '%</div><div class="profile-stat-lbl">ACCURACY</div></div>' +
+        '<div class="profile-stat"><div class="profile-stat-val">' + (G ? G.checkpointBestScore || 0 : 0) + '/30</div><div class="profile-stat-lbl">BEST SCORE</div></div>' +
+      '</div>' +
+      '<div class="section-head" style="font-size:14px">Change Character</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">' +
+        AVATAR_LIST.map(function(a) {
+          var sel = G && G.avatarId === a.id;
+          return '<div onclick="setAvatar(\'' + a.id + '\')" style="background:var(--bg2);border:1.5px solid ' + (sel ? 'var(--liberty)' : 'var(--border2)') + ';padding:8px;text-align:center;cursor:pointer">' +
+            getPortraitSVG(a.id, 40) +
+            '<div style="font-family:var(--dm);font-size:7px;color:' + (sel ? 'var(--liberty)' : 'var(--text3)') + ';margin-top:4px;letter-spacing:1px">' + a.label + '</div></div>';
+        }).join('') +
+      '</div>' +
+      '<button class="btn full red" onclick="if(confirm('Reset all progress? This cannot be undone.')){clearSave();location.reload();}" style="font-size:11px;margin-top:8px"><span>Reset Progress</span></button>';
+  }
+}
+
+function setAvatar(id) { if (G) { G.avatarId = id; saveGame(); updateHUD(); openProfile(); } }
+
+async function loadTeacherData() {
+  var el = document.getElementById('teacher-content');
+  if (el) el.innerHTML = '<div style="font-family:var(--dm);font-size:11px;color:var(--text3)">Loading...</div>';
+  try {
+    var r = await fetch(AC_SUPA_URL + '/rest/v1/ac_results?unit_id=eq.' + SHELL_UNIT_ID + '&order=best_score.desc', {headers: AC_HEADERS});
+    var data = await r.json() || [];
+    var avg = data.length ? Math.round(data.reduce(function(a, s) { return a + (s.best_score || 0); }, 0) / data.length) : 0;
+    var above = data.filter(function(s) { return (s.best_score || 0) >= 24; }).length;
+    var below = data.filter(function(s) { return (s.best_score || 0) < 18; }).length;
+    var html =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">' +
+        '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:26px;color:var(--liberty)">' + data.length + '</div><div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:1px">STUDENTS</div></div>' +
+        '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:26px;color:var(--liberty)">' + avg + '/30</div><div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:1px">AVG SCORE</div></div>' +
+        '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:26px;color:var(--green2)">' + above + '</div><div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:1px">ABOVE EXP.</div></div>' +
+        '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:26px;color:var(--red2)">' + below + '</div><div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:1px">BELOW EXP.</div></div>' +
+      '</div>' +
+      '<table class="lb-table"><thead><tr><th>#</th><th>STUDENT</th><th>PD</th><th>SCORE</th><th>ACC</th><th>TIER</th></tr></thead><tbody>' +
+      data.map(function(s, i) {
+        var t = (s.best_score || 0) >= 24 ? 'Above' : (s.best_score || 0) >= 18 ? 'Near' : 'Below';
+        var tc = (s.best_score || 0) >= 24 ? 'var(--green2)' : (s.best_score || 0) >= 18 ? 'var(--gold)' : 'var(--red2)';
+        return '<tr><td style="font-family:var(--dm);font-size:10px;color:var(--text3)">' + (i + 1) + '</td>' +
+          '<td><div class="lb-name">' + (s.name || '--') + '</div></td>' +
+          '<td style="font-family:var(--dm);font-size:10px;color:var(--text2)">' + (s.period && s.period !== '0' ? 'Pd ' + s.period : '--') + '</td>' +
+          '<td class="lb-score">' + (s.best_score || 0) + '/30</td>' +
+          '<td style="font-family:var(--dm);font-size:10px;color:var(--gold)">' + (s.best_accuracy || 0) + '%</td>' +
+          '<td style="font-family:var(--bebas);font-size:11px;color:' + tc + '">' + t + '</td></tr>';
+      }).join('') +
+      '</tbody></table>';
+    if (el) el.innerHTML = html;
+  } catch(e) {
+    if (el) el.innerHTML = '<div style="font-family:var(--dm);font-size:11px;color:var(--text3)">Could not load data.</div>';
+  }
+}
+
+async function pushACResult() {
+  if (!G || !G.name || G.teacher === 'guest') return;
+  var acc = G.checkpointBestAccuracy || 0;
+  var score = G.checkpointBestScore || 0;
+  var trophy = acc >= 90 ? 'gold' : acc >= 80 ? 'silver' : acc >= 70 ? 'bronze' : acc >= 60 ? 'completed' : 'tryagain';
+  try {
+    var prev = null;
+    try {
+      var pr = await fetch(AC_SUPA_URL + '/rest/v1/ac_results?name=eq.' + encodeURIComponent(G.name) + '&period=eq.' + encodeURIComponent(G.period || '') + '&unit_id=eq.' + SHELL_UNIT_ID, {headers: AC_HEADERS});
+      var pd = await pr.json();
+      if (pd && pd.length) prev = pd[0];
+    } catch(e) {}
+    var bestScore = prev ? Math.max(prev.best_score || 0, score) : score;
+    var bestAcc = prev ? Math.max(prev.best_accuracy || 0, acc) : acc;
+    var bestTrophy = bestAcc >= 90 ? 'gold' : bestAcc >= 80 ? 'silver' : bestAcc >= 70 ? 'bronze' : bestAcc >= 60 ? 'completed' : 'tryagain';
+    var attempts = (prev ? prev.attempts || 1 : 0) + 1;
+    await fetch(AC_SUPA_URL + '/rest/v1/ac_results?on_conflict=name,period,unit_id', {
+      method: 'POST',
+      headers: Object.assign({}, AC_HEADERS, {'Prefer': 'resolution=merge-duplicates'}),
+      body: JSON.stringify({name: G.name, period: G.period || '', unit_id: SHELL_UNIT_ID, best_score: bestScore, best_accuracy: bestAcc, trophy: bestTrophy, attempts: attempts, cards: 0, updated_at: new Date().toISOString()})
+    });
+  } catch(e) {}
+}
+
+(function() {
+  function isInput(t) { return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); }
+  document.addEventListener('contextmenu', function(e) { if (!isInput(e.target)) e.preventDefault(); });
+  document.addEventListener('copy', function(e) { if (!isInput(e.target)) e.preventDefault(); });
+  document.addEventListener('cut', function(e) { if (!isInput(e.target)) e.preventDefault(); });
+  document.addEventListener('keydown', function(e) {
+    if (isInput(e.target)) return;
+    var ctrl = e.ctrlKey || e.metaKey;
+    if (ctrl && ['c','x','a','C','X','A'].indexOf(e.key) !== -1) e.preventDefault();
+  });
+})();
+
+window.addEventListener('DOMContentLoaded', function() {
+  var saved = loadGame();
+  if (saved) G = saved;
+  showLoginGate();
+});
+
+</script>
+</body>
+</html>
