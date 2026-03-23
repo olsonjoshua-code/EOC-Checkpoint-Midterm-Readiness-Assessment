@@ -460,7 +460,10 @@ function notifyShellComplete() {
   } catch(e) {}
 }
 
-function returnToShell() { window.location.href = SHELL_URL; }
+function returnToShell() {
+  var stored = localStorage.getItem('ac_shell_return');
+  window.location.href = stored || SHELL_URL;
+}
 
 function showLoginGate() {
   var sp = getShellProfile();
@@ -683,10 +686,18 @@ function showSectionIntro(idx) {
         '<div style="font-family:var(--dm);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:4px">STANDARDS</div>' +
         '<div style="font-family:var(--dm);font-size:10px;color:var(--text2)">' + s.standards + '</div>' +
       '</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">' +
-        '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:20px;color:var(--gold)">8</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">QUESTIONS</div></div>' +
-        '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:20px;color:var(--gold)">2+6</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">STIM+KNOW</div></div>' +
-      '</div>';
+      (function(){
+        var pool=QUESTION_BANK.filter(function(q){return q.section===(idx+1);});
+        var stimCount=Math.min(2,pool.filter(function(q){return q.stimulus_type==='image'||q.stimulus_type==='text';}).length);
+        var nonCount=Math.min(6,pool.length-stimCount);
+        var totalQ=stimCount+nonCount;
+        var stimLabel=stimCount>0?stimCount+'+'+nonCount:''+totalQ;
+        var stimSub=stimCount>0?'STIM+KNOW':'QUESTIONS';
+        return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">' +
+          '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:20px;color:var(--gold)">'+totalQ+'</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">QUESTIONS</div></div>' +
+          '<div style="background:var(--bg2);border:1px solid var(--border);padding:12px;text-align:center"><div style="font-family:var(--bebas);font-size:20px;color:var(--gold)">'+stimLabel+'</div><div style="font-family:var(--dm);font-size:8px;color:var(--text3);letter-spacing:1px">'+stimSub+'</div></div>' +
+        '</div>';
+      })() +
   }
   showScreen('section-intro-screen');
   window.scrollTo(0, 0);
