@@ -425,7 +425,8 @@ function showLoginGate() {
   var saved = loadGame();
   if (saved && G && G.name) { showWelcomeGate(G, sp || null); return; }
   if (sp) { showWelcomeGate(null, sp); return; }
-  document.getElementById('code-gate-overlay').classList.add('show');
+  var cgo = document.getElementById('code-gate-overlay');
+  cgo.style.display = 'flex';
   goToStep(1);
 }
 
@@ -463,7 +464,8 @@ function welcomeContinue() {
 function welcomeNewPlayer() {
   document.getElementById('welcome-gate').style.display = 'none';
   clearSave(); G = null;
-  document.getElementById('code-gate-overlay').classList.add('show');
+  var cgo = document.getElementById('code-gate-overlay');
+  cgo.style.display = 'flex';
   goToStep(1);
 }
 
@@ -504,7 +506,7 @@ function submitClassCode() {
   if (!name) { if (err) err.textContent = 'Please enter your name.'; return; }
   G = newGame(name, _loginTeacher || 'guest', _loginPeriod || '0', 'scholar_f');
   saveGame();
-  document.getElementById('code-gate-overlay').classList.remove('show');
+  document.getElementById('code-gate-overlay').style.display = 'none';
   if (inp) inp.value = '';
   afterLogin();
 }
