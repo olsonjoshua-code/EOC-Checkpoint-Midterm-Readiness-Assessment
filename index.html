@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>American Chronicles: Semester 1 Midterm Checkpoint</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -1186,9 +1188,19 @@ async function pushACResult() {
 })();
 
 window.addEventListener('DOMContentLoaded', function() {
-  var saved = loadGame();
-  if (saved) G = saved;
-  showLoginGate();
+  try {
+    var saved = loadGame();
+    if (saved) G = saved;
+    showLoginGate();
+  } catch(e) {
+    // Show error visibly if JS fails
+    document.body.innerHTML = '<div style="position:fixed;inset:0;background:#0d0a08;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:sans-serif;color:#e8a020;padding:20px;text-align:center">' +
+      '<div style="font-size:24px;margin-bottom:12px">American Chronicles</div>' +
+      '<div style="font-size:14px;color:#a09080;margin-bottom:8px">Midterm Checkpoint</div>' +
+      '<div style="font-size:11px;color:#584840;max-width:400px">Error loading: ' + e.message + '</div>' +
+      '<div style="margin-top:20px"><a href="." style="color:#e8a020;font-size:13px">Reload</a></div>' +
+    '</div>';
+  }
 });
 
 </script>
